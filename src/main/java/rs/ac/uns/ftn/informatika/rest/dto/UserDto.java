@@ -1,51 +1,40 @@
-package rs.ac.uns.ftn.informatika.rest.domain;
+package rs.ac.uns.ftn.informatika.rest.dto;
 
-import rs.ac.uns.ftn.informatika.rest.dto.UserDto;
+import rs.ac.uns.ftn.informatika.rest.domain.User;
 
 import javax.persistence.*;
 
-@Entity
-@Table(name="userTab")
-public class User{
+public class UserDto {
     public enum Role {
         UNAUTHENTICATED_USER, AUTHENTICATED_USER, ADMINISTRATOR
     }
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "surname", nullable = false)
     private String surname;
 
-    @Column(name = "email", nullable = false, unique = true)
     private String email;
-//    private String username;
-    @Column(name = "password", nullable = false)
+
     private String password;
 
-    @Column(name = "role", unique = false, nullable = false)
-    @Enumerated(EnumType.ORDINAL)
-    private Role role;
+    private User.Role role;
 
-    @Column(name = "isAuthenticated", nullable = false)
     private boolean isAuthenticated;
 
-    public User() {
+    public UserDto() {
     }
 
-    public User(UserDto userDto) {
-        id = userDto.getId();
-        name = userDto.getName();
-        surname = userDto.getSurname();
-        email = userDto.getEmail();
-        password = userDto.getPassword();
-        role = userDto.getRole();
-        isAuthenticated = false;
+    public UserDto(User user) {
+        this.id = user.getId();
+        this.name = user.getName();
+        this.surname = user.getSurname();
+        this.email = user.getEmail();
+        this.password = user.getPassword();
+        this.role = user.getRole();
+        this.isAuthenticated = user.isAuthenticated();
     }
-    public User(Integer id, String name, String surname, String email, String password, Role role) {
+    public UserDto(Integer id, String name, String surname, String email, String password, User.Role role) {
         super();
         this.id = id;
         this.name = name;
@@ -96,11 +85,11 @@ public class User{
         this.password = password;
     }
 
-    public Role getRole() {
+    public User.Role getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
+    public void setRole(User.Role role) {
         this.role = role;
     }
 
