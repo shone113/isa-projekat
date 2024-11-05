@@ -35,4 +35,24 @@ public class UserController {
         }
         return ResponseEntity.ok(userDtos);
     }
+
+    @GetMapping("/registered")
+    public ResponseEntity<List<UserDto>> getRegistratedUsers() {
+        List<User> registratedUsers = userService.findRegistratedUsers();
+        List<UserDto> userDtos = new ArrayList<>();
+        for (User user : registratedUsers) {
+            userDtos.add(new UserDto(user));
+        }
+        return ResponseEntity.ok(userDtos);
+    }
+
+    @GetMapping("/filter/{name}")
+    public ResponseEntity<List<UserDto>> getRegistratedUsers(@PathVariable String name) {
+        List<User> filteredUsers = userService.filterUsers(name);
+        List<UserDto> userDtos = new ArrayList<>();
+        for (User user : filteredUsers) {
+            userDtos.add(new UserDto(user));
+        }
+        return ResponseEntity.ok(userDtos);
+    }
 }

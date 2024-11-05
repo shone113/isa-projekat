@@ -20,8 +20,6 @@ public class UserDto {
 
     private User.Role role;
 
-    private boolean isAuthenticated;
-
     public UserDto() {
     }
 
@@ -32,7 +30,6 @@ public class UserDto {
         this.email = user.getEmail();
         this.password = user.getPassword();
         this.role = user.getRole();
-        this.isAuthenticated = user.isAuthenticated();
     }
     public UserDto(Integer id, String name, String surname, String email, String password, User.Role role) {
         super();
@@ -42,7 +39,6 @@ public class UserDto {
         this.email = email;
         this.password = password;
         this.role = role;
-        this.isAuthenticated = false;
     }
 
     public Integer getId() {
@@ -91,13 +87,5 @@ public class UserDto {
 
     public void setRole(User.Role role) {
         this.role = role;
-    }
-
-    public boolean isAuthenticated() {
-        return isAuthenticated;
-    }
-
-    public void setAuthenticated(boolean authenticated) {
-        isAuthenticated = authenticated;
     }
 }

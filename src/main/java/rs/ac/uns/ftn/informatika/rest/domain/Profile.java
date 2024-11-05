@@ -33,20 +33,16 @@ public class Profile {
     )
     private Set<Profile> followerProfiles;
 
-    @Column(name = "followers")
-    private int followers;
-
     @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL)
     private Set<Post> posts;
 
     public Profile() {
     }
 
-    public Profile(Integer id, User user,  int followers) {
+    public Profile(Integer id, User user) {
         super();
         this.id = id;
         this.user = user;
-        this.followers = followers;
     }
 
     public User getUser() {
@@ -71,14 +67,6 @@ public class Profile {
 
     public void setFollowerProfiles(Set<Profile> followerProfiles) {
         this.followerProfiles = followerProfiles;
-    }
-
-    public int getFollowers() {
-        return followers;
-    }
-
-    public void setFollowers(int followers) {
-        this.followers = followers;
     }
 
     public Set<Post> getPosts() {

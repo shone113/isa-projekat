@@ -30,8 +30,14 @@ public class User{
     @Enumerated(EnumType.ORDINAL)
     private Role role;
 
-    @Column(name = "isAuthenticated", nullable = false)
-    private boolean isAuthenticated;
+    @Column(name = "followersCount")
+    private int followers;
+
+    @Column(name = "followingCount")
+    private int followingCount;
+
+    @Column(name = "postsCount")
+    private int postsCount;
 
     public User() {
     }
@@ -43,7 +49,6 @@ public class User{
         email = userDto.getEmail();
         password = userDto.getPassword();
         role = userDto.getRole();
-        isAuthenticated = false;
     }
     public User(Integer id, String name, String surname, String email, String password, Role role) {
         super();
@@ -53,7 +58,6 @@ public class User{
         this.email = email;
         this.password = password;
         this.role = role;
-        this.isAuthenticated = false;
     }
 
     public Integer getId() {
@@ -104,11 +108,16 @@ public class User{
         this.role = role;
     }
 
-    public boolean isAuthenticated() {
-        return isAuthenticated;
-    }
+    public int getFollowers() {return followers;}
 
-    public void setAuthenticated(boolean authenticated) {
-        isAuthenticated = authenticated;
-    }
+    public void setFollowers(int followers) {this.followers = followers;}
+
+    public int getFollowingCount() {return followingCount;}
+
+    public void setFollowingCount(int followingCount) {this.followingCount = followingCount;}
+
+    public int getPostsCount() {return postsCount;}
+
+    public void setPostsCount(int postsCount) {this.postsCount = postsCount;}
+
 }
