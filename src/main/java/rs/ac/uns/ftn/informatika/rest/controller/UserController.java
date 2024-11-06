@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.informatika.rest.domain.User;
+import rs.ac.uns.ftn.informatika.rest.dto.LoginDetailsDto;
 import rs.ac.uns.ftn.informatika.rest.dto.UserDto;
 import rs.ac.uns.ftn.informatika.rest.service.UserService;
 
@@ -100,5 +101,32 @@ public class UserController {
             userDtos.add(new UserDto(user));
         }
         return ResponseEntity.ok(userDtos);
+    }
+
+    @GetMapping("activate/{email}/{code}")
+    public ResponseEntity<UserDto> activateAccount(@PathVariable String code, @PathVariable String email) {
+        User user = userService.activateAccount(code, email);
+        if (user == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(new UserDto(user));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<UserDto> login(@RequestBody LoginDetailsDto loginDetailsDto) {
+        User user = userService.login(loginDetailsDto.getEmail(), loginDetailsDto.getPassword());
+        if(user == null)
+            return ResponseEntity.notFound().build();
+        if(user.getRole() != User.Role.AUTHENTICATED_USER)
+                return ResponseEntity.unprocessableEntity().build();
+        if(!loginDetailsDto.getPassword().equals(user.getPassword()))
+            return ResponseEntity.badRequest().build();
+        return ResponseEntity.ok(new UserDto(user));
+    }
+
+    @GetMapping("/code/{email}")
+    public ResponseEntity<String> sendActivationCode(@PathVariable String email) {
+        userService.sendActivateCode(email);
+        return ResponseEntity.ok("");
     }
 }
