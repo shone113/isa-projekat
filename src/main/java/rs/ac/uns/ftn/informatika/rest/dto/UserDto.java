@@ -20,6 +20,12 @@ public class UserDto {
 
     private User.Role role;
 
+    private int followersCount;
+
+    private int followingCount;
+
+    private int postsCount;
+
     public UserDto() {
     }
 
@@ -30,8 +36,11 @@ public class UserDto {
         this.email = user.getEmail();
         this.password = user.getPassword();
         this.role = user.getRole();
+        this.followersCount = user.getFollowers();
+        this.followingCount = user.getFollowingCount();
+        this.postsCount = user.getPostsCount();
     }
-    public UserDto(Integer id, String name, String surname, String email, String password, User.Role role) {
+    public UserDto(Integer id, String name, String surname, String email, String password, User.Role role, int followersCount, int followingCount, int postsCount) {
         super();
         this.id = id;
         this.name = name;
@@ -39,6 +48,9 @@ public class UserDto {
         this.email = email;
         this.password = password;
         this.role = role;
+        this.followersCount = followersCount;
+        this.followingCount = followingCount;
+        this.postsCount = postsCount;
     }
 
     public Integer getId() {
@@ -88,4 +100,17 @@ public class UserDto {
     public void setRole(User.Role role) {
         this.role = role;
     }
+
+    public int getFollowers() {return followersCount;}
+
+    public void setFollowers(int followersCount) {this.followersCount = followersCount;}
+
+    public int getFollowingCount() {return followingCount;}
+
+    public void setFollowingCount(int followingCount) {this.followingCount = followingCount;}
+
+    public int getPostsCount() {return postsCount;}
+
+    public void setPostsCount(int postsCount) {this.postsCount = postsCount;}
+
 }
