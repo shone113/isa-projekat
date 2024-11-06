@@ -58,4 +58,29 @@ public class UserService {
         activationCodeRepository.deleteById(activationCode.getId());
         return userRepository.save(user);
     }
+
+    public User login(String email, String password) {
+        User user = userRepository.getUserByEmail(email);
+//        if(user == null || user.getRole() != User.Role.AUTHENTICATED_USER)
+//            return null;
+//        if(!password.equals(user.getPassword()))
+//            return null;
+        return user;
+    }
+
+    public void sendActivateCode(String email) {
+        User user = userRepository.getUserByEmail(email);
+        if(user == null)
+            return;
+        ActivationCode activationCode = activationCodeRepository.getActivationCodesByEmail(email);
+        if(activationCode == null)
+            return;
+        activationCodeRepository.deleteById(activationCode.getId());
+        try {
+            activationCodeRepository.save(mailService.sendNotificaitionAsync(user));
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();  // Restore the interrupt flag
+            return;
+        }
+    }
 }
