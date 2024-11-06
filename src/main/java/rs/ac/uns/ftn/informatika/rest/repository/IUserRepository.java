@@ -13,6 +13,7 @@ import java.util.Optional;
 public interface IUserRepository  extends JpaRepository<User, Integer> {
     @Query("select '*' from User u where u.name like 'name'")
     public List<User> filterUsers(String name);
+    public User getUserByEmail(String email);
 //
 //    @Query("select c from Course c join fetch c.exams e where c.id =?1")
 //    public List<User> sortByFollowingCountAsc(Integer courseId);

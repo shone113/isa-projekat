@@ -55,4 +55,13 @@ public class UserController {
         }
         return ResponseEntity.ok(userDtos);
     }
+
+    @GetMapping("activate/{email}/{code}")
+    public ResponseEntity<UserDto> activateAccount(@PathVariable String code, @PathVariable String email) {
+        User user = userService.activateAccount(code, email);
+        if (user == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(new UserDto(user));
+    }
 }
