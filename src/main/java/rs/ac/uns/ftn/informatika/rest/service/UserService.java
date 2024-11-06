@@ -21,6 +21,8 @@ public class UserService {
 
     public User register(User user) {
         try {
+            if(!user.isValid())
+                throw new Exception("User is not valid");
             User registerUser = userRepository.save(user);
             activationCodeRepository.save(mailService.sendNotificaitionAsync(registerUser));
             return registerUser;
