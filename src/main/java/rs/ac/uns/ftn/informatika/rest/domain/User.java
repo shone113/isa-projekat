@@ -31,7 +31,7 @@ public class User{
     private Role role;
 
     @Column(name = "followersCount")
-    private int followers;
+    private int followersCount;
 
     @Column(name = "followingCount")
     private int followingCount;
@@ -49,8 +49,11 @@ public class User{
         email = userDto.getEmail();
         password = userDto.getPassword();
         role = userDto.getRole();
+        followersCount = userDto.getFollowers();
+        followingCount = userDto.getFollowingCount();
+        postsCount = userDto.getPostsCount();
     }
-    public User(Integer id, String name, String surname, String email, String password, Role role) {
+    public User(Integer id, String name, String surname, String email, String password, Role role, int followersCount, int followingCount, int postsCount) {
         super();
         this.id = id;
         this.name = name;
@@ -58,6 +61,9 @@ public class User{
         this.email = email;
         this.password = password;
         this.role = role;
+        this.followersCount = followersCount;
+        this.followingCount = followingCount;
+        this.postsCount = postsCount;
     }
 
     public boolean isValid() {
@@ -112,9 +118,9 @@ public class User{
         this.role = role;
     }
 
-    public int getFollowers() {return followers;}
+    public int getFollowers() {return followersCount;}
 
-    public void setFollowers(int followers) {this.followers = followers;}
+    public void setFollowers(int followersCount) {this.followersCount = followersCount;}
 
     public int getFollowingCount() {return followingCount;}
 

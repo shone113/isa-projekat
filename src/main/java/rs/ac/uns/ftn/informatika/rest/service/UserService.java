@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.informatika.rest.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.informatika.rest.domain.ActivationCode;
 import rs.ac.uns.ftn.informatika.rest.domain.User;
@@ -45,8 +46,8 @@ public class UserService {
         return registeredUsers;
     }
 
-    public List<User> filterUsers(String name) {
-        return userRepository.filterUsers(name);
+    public List<User> filterUsers(String name, String surname, String email, Integer minPostsRange, Integer maxPostsRange) {
+        return userRepository.filterUsers(name, surname, email, minPostsRange, maxPostsRange);
     }
 
     public User activateAccount(String code, String email) {
@@ -83,4 +84,21 @@ public class UserService {
             return;
         }
     }
+    public List<User> getSortedByFollowingCountAsc(){
+        return userRepository.getSortedByFollowingCountAsc();
+    }
+
+    public List<User> getSortedByFollowingCountDesc(){
+        return userRepository.getSortedByFollowingCountDesc();
+    }
+
+    public List<User> getSortedByEmailAsc(){
+        return userRepository.getSortedByEmailAsc();
+    }
+
+    public List<User> getSortedByEmailDesc(){
+        return userRepository.getSortedByEmailDesc();
+    }
+
+
 }
