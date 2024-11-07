@@ -66,6 +66,10 @@ public class User{
         this.postsCount = postsCount;
     }
 
+    public boolean isValid() {
+        String emailRegex = "^[a-zA-Z0-9.]+@[a-zA-Z0-9.]+\\.[a-zA-Z]{2,4}$";
+        return name != null && !name.isEmpty() && surname != null && !surname.isEmpty() && email != null && password != null && !password.isEmpty() && email.matches(emailRegex);
+    }
     public Integer getId() {
         return id;
     }
