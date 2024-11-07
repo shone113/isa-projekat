@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.informatika.rest.domain;
 
 import javax.persistence.*;
 import javax.xml.crypto.Data;
+import javax.xml.stream.Location;
 import java.time.LocalDate;
 import java.util.List;
 import rs.ac.uns.ftn.informatika.rest.dto.PostDTO;
@@ -13,11 +14,21 @@ public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
+
+    @Column(name = "description", nullable = false)
     private String description;
+
+    @Column(name = "likes_count", nullable = false)
     private int likesCount;
-    private int publishingLocationId;
+
+    @Column(name = "publishing_location_id")
+    private Long publishingLocationId;
+
+    @Column(name = "publishing_date", nullable = false)
     private LocalDate publishingDate;
+
+    @Column(name = "image", nullable = true)
     private String image;
 
     @OneToMany(mappedBy = "post", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -33,17 +44,17 @@ public class Post {
         this.id = postDTO.getId();
         this.description = postDTO.getDescription();
         this.likesCount = postDTO.getLikesCount();
-        this.publishingLocationId = postDTO.getPublishingLocationId();
+//        this.publishingLocationId = postDTO.getPublishingLocationId();
         this.publishingDate = postDTO.getPublishingDate();
         this.image = postDTO.getImage();
         this.comments = postDTO.getComments();
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -63,13 +74,13 @@ public class Post {
         this.likesCount = likesCount;
     }
 
-    public int getPublishingLocationId() {
-        return publishingLocationId;
-    }
-
-    public void setPublishingLocationId(int publishingLocationId) {
-        this.publishingLocationId = publishingLocationId;
-    }
+//    public int getPublishingLocationId() {
+//        return publishingLocationId;
+//    }
+//
+//    public void setPublishingLocationId(int publishingLocationId) {
+//        this.publishingLocationId = publishingLocationId;
+//    }
 
     public LocalDate getPublishingDate() {
         return publishingDate;

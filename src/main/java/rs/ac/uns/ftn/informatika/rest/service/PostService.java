@@ -24,7 +24,7 @@ public class PostService implements IPostService {
     }
 
     @Override
-    public Post findOne(Long id) {
+    public Post findOne(Integer id) {
         Post post = postRepository.getOne(id);
         return post;
     }
@@ -40,14 +40,14 @@ public class PostService implements IPostService {
 
     @Override
     @Transactional
-    public Post update(PostDTO post, Long id) throws Exception {
+    public Post update(PostDTO post, Integer id) throws Exception {
         Post postToUpdate = findOne(id);
         if (postToUpdate == null) {
             throw new Exception("Trazeni entitet nije pronadjen.");
         }
         postToUpdate.setDescription(post.getDescription());
         postToUpdate.setLikesCount(post.getLikesCount());
-        postToUpdate.setPublishingLocationId(post.getPublishingLocationId());
+//        postToUpdate.setPublishingLocationId(post.getPublishingLocationId());
         postToUpdate.setPublishingDate(post.getPublishingDate());
         postToUpdate.setImage(post.getImage());
         postToUpdate.setComments(post.getComments());
@@ -55,12 +55,12 @@ public class PostService implements IPostService {
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(Integer id) {
         postRepository.deleteById(id);
     }
 
     @Override
-    public Post deltePostById(Long id){
+    public Post deltePostById(Integer id){
         return postRepository.deletePostById(id);
     }
 

@@ -11,13 +11,13 @@ import java.util.concurrent.ConcurrentMap;
 @Repository
 public class PostRepository{
     private final IPostRepository postRepository;
-    private final ConcurrentMap<Long, Post> posts = new ConcurrentHashMap<Long, Post>();
+    private final ConcurrentMap<Integer, Post> posts = new ConcurrentHashMap<Integer, Post>();
 
     public PostRepository(IPostRepository postRepository) {
         this.postRepository = postRepository;
     }
 
-    public Post deletePostById(Long id){
+    public Post deletePostById(Integer id){
         Post post = this.posts.remove(id);
         return post;
     }

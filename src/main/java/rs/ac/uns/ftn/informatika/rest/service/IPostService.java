@@ -7,9 +7,9 @@ import java.util.Collection;
 
 public interface IPostService {
     Collection<Post> findAll();
-    Post findOne(Long id);
+    Post findOne(Integer id);
     Post create(PostDTO post) throws Exception;
-    Post update(PostDTO post, Long id) throws Exception;
-    void delete(Long id);
-    Post deltePostById(Long id);
+    Post update(PostDTO post, Integer id) throws Exception;
+    void delete(Integer id);
+    Post deltePostById(Integer id);
 }

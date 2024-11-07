@@ -36,6 +36,12 @@ public class UserController {
         return ResponseEntity.ok(userDtos);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDto> getById(@RequestParam int id) {
+        User user = userService.findById(id);
+        return ResponseEntity.ok(new UserDto(user));
+    }
+
     @GetMapping("/registered")
     public ResponseEntity<List<UserDto>> getRegistratedUsers() {
         List<User> registratedUsers = userService.findRegistratedUsers();

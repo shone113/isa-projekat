@@ -28,6 +28,10 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    public User findById(Integer id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
     public List<User> findRegistratedUsers(){
         List<User> users = userRepository.findAll();
         List<User> registeredUsers = users.stream()
