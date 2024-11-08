@@ -1,9 +1,10 @@
 package rs.ac.uns.ftn.informatika.rest.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.informatika.rest.domain.ActivationCode;
+import rs.ac.uns.ftn.informatika.rest.domain.Role;
 import rs.ac.uns.ftn.informatika.rest.domain.User;
 import rs.ac.uns.ftn.informatika.rest.repository.ActivationCodeRepository;
 import rs.ac.uns.ftn.informatika.rest.repository.IUserRepository;
@@ -18,12 +19,19 @@ public class UserService {
     @Autowired
     private MailService mailService;
     @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private RoleService roleService;
+    @Autowired
     private ActivationCodeRepository activationCodeRepository;
 
     public User register(User user) {
         try {
             if(!user.isValid())
                 throw new Exception("User is not valid");
+            List<Role> roles = roleService.findByName("ROLE_USER");
+            user.setRoles(roles);
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
             User registerUser = userRepository.save(user);
             activationCodeRepository.save(mailService.sendNotificaitionAsync(registerUser));
             return registerUser;
@@ -44,8 +52,9 @@ public class UserService {
 
     public List<User> findRegistratedUsers(){
         List<User> users = userRepository.findAll();
+        Role role = new Role();
         List<User> registeredUsers = users.stream()
-                .filter(user -> user.getRole() != User.Role.ADMINISTRATOR)
+                .filter(user -> user.getAuthorities() != role) /// provjeriti nisam siguran da li ce ovo raditi uopste
                 .collect(Collectors.toList());
         return registeredUsers;
     }
@@ -59,7 +68,6 @@ public class UserService {
         if(!code.equals(activationCode.getCode()) || email.isEmpty() || email == null)
             return null;
         User user = userRepository.getUserByEmail(email);
-        user.setRole(User.Role.AUTHENTICATED_USER);
         activationCodeRepository.deleteById(activationCode.getId());
         return userRepository.save(user);
     }
@@ -104,5 +112,5 @@ public class UserService {
         return userRepository.getSortedByEmailDesc();
     }
 
-
+    public User getByEmail(String email) { return userRepository.getUserByEmail(email); }
 }

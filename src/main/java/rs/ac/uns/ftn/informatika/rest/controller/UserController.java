@@ -123,8 +123,6 @@ public class UserController {
         User user = userService.login(loginDetailsDto.getEmail(), loginDetailsDto.getPassword());
         if(user == null)
             return ResponseEntity.notFound().build();
-        if(user.getRole() != User.Role.AUTHENTICATED_USER)
-                return ResponseEntity.unprocessableEntity().build();
         if(!loginDetailsDto.getPassword().equals(user.getPassword()))
             return ResponseEntity.badRequest().build();
         return ResponseEntity.ok(new UserDto(user));
