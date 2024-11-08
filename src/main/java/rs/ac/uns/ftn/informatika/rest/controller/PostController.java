@@ -13,12 +13,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import rs.ac.uns.ftn.informatika.rest.domain.Comment;
 import rs.ac.uns.ftn.informatika.rest.domain.Post;
+import rs.ac.uns.ftn.informatika.rest.dto.CommentDTO;
 import rs.ac.uns.ftn.informatika.rest.service.PostService;
 import rs.ac.uns.ftn.informatika.rest.dto.PostDTO;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Tag(name = "Post controller", description = "The posting API")
 @RestController
@@ -32,6 +36,18 @@ public class PostController {
     public ResponseEntity<Collection<Post>> getPosts(HttpSession httpSession){
         Collection<Post> posts = postService.findAll();
         return new ResponseEntity<Collection<Post>>(posts, HttpStatus.OK);
+    }
+
+    @GetMapping("/for-user/{id}")
+    public ResponseEntity<List<PostDTO>> getPostsForUser(@PathVariable Integer id){
+        List<PostDTO> postDTOs = postService.findPostsForUser(id);
+        return ResponseEntity.ok(postDTOs);
+    }
+
+    @PatchMapping(value = "/like/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PostDTO> likePost(@PathVariable Integer id){
+        PostDTO postDTOs = postService.likePost(id);
+        return ResponseEntity.ok(postDTOs);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -58,10 +74,7 @@ public class PostController {
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Post> deletePost(@Parameter(description = "Post id", required = true) @PathVariable("id") int id){
-        Post deletedPost = postService.deltePostById(id);
-        if(deletedPost == null){
-            return new ResponseEntity<Post>(HttpStatus.NOT_FOUND);
-        }
+        postService.delete(id);
         return new ResponseEntity<Post>(HttpStatus.OK);
     }
 }

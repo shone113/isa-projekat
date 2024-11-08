@@ -4,18 +4,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.informatika.rest.domain.Greeting;
 import rs.ac.uns.ftn.informatika.rest.domain.Post;
+import rs.ac.uns.ftn.informatika.rest.domain.User;
 import rs.ac.uns.ftn.informatika.rest.dto.GreetingDTO;
 import rs.ac.uns.ftn.informatika.rest.dto.PostDTO;
 import rs.ac.uns.ftn.informatika.rest.repository.IPostRepository;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Service
 public class PostService implements IPostService {
 
     @Autowired
     private IPostRepository postRepository;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private ProfileService profileService;
 
     @Override
     public Collection<Post> findAll() {
@@ -29,6 +36,19 @@ public class PostService implements IPostService {
         return post;
     }
 
+    @Transactional
+    public List<PostDTO> findPostsForUser(Integer userId) {
+        List<Post> posts = postRepository.findAll();
+        List<PostDTO> filteredPostDTOs = new ArrayList<>();
+        for(Post post : posts) {
+            if(profileService.doesFollowPublisher(userId, post.getCreatorProfileId())){
+                filteredPostDTOs.add(new PostDTO(post));
+            }
+        }
+
+        return filteredPostDTOs;
+    }
+
     @Override
     public Post create(PostDTO post) throws Exception {
         if (post.getId() != null) {
@@ -38,6 +58,12 @@ public class PostService implements IPostService {
         return savedPost;
     }
 
+    @Transactional
+    public PostDTO likePost(int postId){
+        Post post = postRepository.getOne(postId);
+        post.incrementLikesCount();
+        return new PostDTO(post);
+    }
     @Override
     @Transactional
     public Post update(PostDTO post, Integer id) throws Exception {
@@ -59,9 +85,9 @@ public class PostService implements IPostService {
         postRepository.deleteById(id);
     }
 
-    @Override
-    public Post deltePostById(Integer id){
-        return postRepository.deletePostById(id);
-    }
+//    @Override
+//    public void deltePostById(Integer id){
+//        postRepository.deletePostById(id);
+//    }
 
 }

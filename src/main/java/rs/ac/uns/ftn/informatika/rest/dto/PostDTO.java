@@ -15,10 +15,11 @@ public class PostDTO {
     private LocalDate publishingDate;
     private String image;
     private List<Comment> comments;
+    private Integer creatorProfileId;
 
     public PostDTO() {}
 
-    public PostDTO(Integer id, String description, int likesCount){
+    public PostDTO(Integer id, String description, int likesCount, int creatorId){
         super();
         this.id = id;
         this.description = description;
@@ -27,6 +28,7 @@ public class PostDTO {
         this.publishingDate = LocalDate.now();
         this.image = "";
         this.comments = new ArrayList<>();
+        this.creatorProfileId = creatorId;
     }
     public PostDTO(Post post) {
         this.id = post.getId();
@@ -36,6 +38,7 @@ public class PostDTO {
         this.publishingDate = post.getPublishingDate();
         this.image = post.getImage();
         this.comments = post.getComments();
+        this.creatorProfileId = post.getCreatorProfileId() != null ? post.getCreatorProfileId() : null;
     }
     public Integer getId() {
         return id;

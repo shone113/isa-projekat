@@ -11,5 +11,5 @@ public interface IPostService {
     Post create(PostDTO post) throws Exception;
     Post update(PostDTO post, Integer id) throws Exception;
     void delete(Integer id);
-    Post deltePostById(Integer id);
+//    Post deltePostById(Integer id);
 }
