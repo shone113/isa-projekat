@@ -38,6 +38,14 @@ public class Post {
     @JoinColumn(name = "profile_id")
     private Profile profile;
 
+    @ManyToMany()
+    @JoinTable(
+            name = "post_likes",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "profile_id")
+    )
+    private List<Profile> likedBy;
+
     public Post() {}
 
     public Post(PostDTO postDTO) {

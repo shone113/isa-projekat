@@ -19,6 +19,7 @@ import rs.ac.uns.ftn.informatika.rest.dto.CommentDTO;
 import rs.ac.uns.ftn.informatika.rest.service.PostService;
 import rs.ac.uns.ftn.informatika.rest.dto.PostDTO;
 
+import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,10 +45,21 @@ public class PostController {
         return ResponseEntity.ok(postDTOs);
     }
 
-    @PatchMapping(value = "/like/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PostDTO> likePost(@PathVariable Integer id){
-        PostDTO postDTOs = postService.likePost(id);
-        return ResponseEntity.ok(postDTOs);
+//    @PatchMapping(value = "/like/{postId}", produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<PostDTO> likePost(@PathVariable Integer postId, @RequestParam Integer profileId){
+//        Post post = postService.likePost(postId, profileId);
+//        return ResponseEntity.ok(new PostDTO(post));
+//    }
+    @PutMapping(value = "/like/{postId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PostDTO> likePost(@PathVariable Integer postId, @RequestParam Integer profileId){
+        PostDTO postDTO = postService.likePost(postId, profileId);
+        return ResponseEntity.ok(postDTO);
+    }
+
+    @PutMapping(value = "/unlike/{postId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PostDTO> unlikePost(@PathVariable Integer postId, @RequestParam Integer profileId){
+        PostDTO postDTO = postService.unlikePost(postId, profileId);
+        return ResponseEntity.ok(postDTO);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -76,5 +88,10 @@ public class PostController {
     public ResponseEntity<Post> deletePost(@Parameter(description = "Post id", required = true) @PathVariable("id") int id){
         postService.delete(id);
         return new ResponseEntity<Post>(HttpStatus.OK);
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<String> handleEntityNotFoundException(EntityNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 }

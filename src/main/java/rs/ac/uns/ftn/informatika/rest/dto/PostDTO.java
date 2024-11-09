@@ -16,6 +16,7 @@ public class PostDTO {
     private String image;
     private List<Comment> comments;
     private Integer creatorProfileId;
+    private boolean liked;
 
     public PostDTO() {}
 
@@ -95,4 +96,6 @@ public class PostDTO {
     public void setComments(List<Comment> comments) {
         this.comments = comments;
     }
+    public void setLiked(boolean liked) { this.liked = liked; }
+    public boolean getLiked() { return liked; }
 }

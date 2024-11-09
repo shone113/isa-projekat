@@ -1,6 +1,8 @@
 package rs.ac.uns.ftn.informatika.rest.dto;
 
 import rs.ac.uns.ftn.informatika.rest.domain.Comment;
+import rs.ac.uns.ftn.informatika.rest.domain.Post;
+import rs.ac.uns.ftn.informatika.rest.domain.User;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import java.time.LocalDate;
@@ -11,6 +13,8 @@ public class CommentDTO {
     private LocalDate creationDate;
     private Integer creatorId;
     private Integer postId;
+    private String creatorName;
+    private String creatorSurname;
 
     public CommentDTO(Comment comment) {
         this.id = comment.getId();
@@ -69,4 +73,21 @@ public class CommentDTO {
     public void setPost(Integer postId) {
         this.postId = postId;
     }
+
+    public String getCreatorName() {
+        return creatorName;
+    }
+
+    public void setCreatorName(String creatorName) {
+        this.creatorName = creatorName;
+    }
+
+    public String getCreatorSurname() {
+        return creatorSurname;
+    }
+
+    public void setCreatorSurname(String creatorSurname) {
+        this.creatorSurname = creatorSurname;
+    }
+
 }

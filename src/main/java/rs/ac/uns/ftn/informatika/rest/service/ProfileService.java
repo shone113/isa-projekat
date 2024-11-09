@@ -27,8 +27,11 @@ public class ProfileService {
                 .anyMatch(profile -> profile.getId() == creatorProfileId);
 
         return isFollowing;
-//        return followingProfiles.contains(userProfile.getId());
-//        return userProfile.getFollowingProfiles().contains(creatorProfileId);
+    }
+
+    @Transactional
+    public Profile getProfileByUserId(Integer userId) {
+        return profileRepository.findProfilesByUserId(userId);
     }
 
 }

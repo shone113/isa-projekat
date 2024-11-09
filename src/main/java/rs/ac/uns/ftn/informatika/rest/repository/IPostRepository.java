@@ -15,4 +15,14 @@ public interface IPostRepository extends JpaRepository<Post, Integer> {
     @Query("DELETE FROM Post p WHERE p.id = :postId")
     public void deletePostById(@Param("postId") Integer postId);
 
+    @Modifying
+    @Query(value = "INSERT INTO post_likes (post_id, profile_id) VALUES (:postId, :profileId)", nativeQuery = true)
+    void likePost(@Param("postId") Integer postId, @Param("profileId") Integer profileId);
+
+    @Modifying
+    @Query(value = "DELETE FROM post_likes WHERE post_id = :postId AND profile_id = :profileId", nativeQuery = true)
+    void unlikePost(@Param("postId") Integer postId, @Param("profileId") Integer profileId);
+
+    @Query(value = "SELECT COUNT(*) > 0 FROM post_likes WHERE post_id = :postId AND profile_id = :profileId", nativeQuery = true)
+    boolean doesUserProfileLikedPost(@Param("profileId") Integer profileId, @Param("postId") Integer postId);
 }

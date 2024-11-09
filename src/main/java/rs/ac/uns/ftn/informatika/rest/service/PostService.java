@@ -4,11 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.informatika.rest.domain.Greeting;
 import rs.ac.uns.ftn.informatika.rest.domain.Post;
+import rs.ac.uns.ftn.informatika.rest.domain.Profile;
 import rs.ac.uns.ftn.informatika.rest.domain.User;
 import rs.ac.uns.ftn.informatika.rest.dto.GreetingDTO;
 import rs.ac.uns.ftn.informatika.rest.dto.PostDTO;
 import rs.ac.uns.ftn.informatika.rest.repository.IPostRepository;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -42,7 +44,10 @@ public class PostService implements IPostService {
         List<PostDTO> filteredPostDTOs = new ArrayList<>();
         for(Post post : posts) {
             if(profileService.doesFollowPublisher(userId, post.getCreatorProfileId())){
-                filteredPostDTOs.add(new PostDTO(post));
+                PostDTO postDTO = new PostDTO(post);
+                Profile profile = profileService.getProfileByUserId(userId);
+                postDTO.setLiked(postRepository.doesUserProfileLikedPost(profile.getId(), post.getId()));
+                filteredPostDTOs.add(postDTO);
             }
         }
 
@@ -59,11 +64,34 @@ public class PostService implements IPostService {
     }
 
     @Transactional
-    public PostDTO likePost(int postId){
-        Post post = postRepository.getOne(postId);
-        post.incrementLikesCount();
-        return new PostDTO(post);
+    public PostDTO likePost(int postId, int profileId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException("Post not found with ID: " + postId));
+
+        postRepository.likePost(postId, profileId);
+
+        post.setLikesCount(post.getLikesCount() + 1);
+        postRepository.save(post);
+        PostDTO postDTO = new PostDTO(post);
+        postDTO.setLiked(true);
+        return postDTO;
     }
+
+
+    @Transactional
+    public PostDTO unlikePost(int postId, int profileId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException("Post not found with ID: " + postId));
+
+        postRepository.unlikePost(postId, profileId);
+
+        post.setLikesCount(post.getLikesCount() - 1);
+        postRepository.save(post);
+        PostDTO postDTO = new PostDTO(post);
+        postDTO.setLiked(false);
+        return postDTO;
+    }
+
     @Override
     @Transactional
     public Post update(PostDTO post, Integer id) throws Exception {

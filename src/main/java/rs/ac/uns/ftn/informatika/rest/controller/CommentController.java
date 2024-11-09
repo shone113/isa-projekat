@@ -24,19 +24,15 @@ public class CommentController {
 
     @GetMapping("/by-post-id/{id}")
     public ResponseEntity<List<CommentDTO>> getCommentsForPost(@PathVariable int id) {
-        List<Comment> comments = commentService.findCommentsForPost(id);
-        List<CommentDTO> commentDTOs = new ArrayList<>();
-        for(Comment comment : comments) {
-            commentDTOs.add(new CommentDTO(comment));
-        }
+        List<CommentDTO> commentDTOs = commentService.findCommentsForPost(id);
         return ResponseEntity.ok(commentDTOs);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CommentDTO> createComment(@RequestBody CommentDTO commentDTO) {
         try{
-            Comment savedComment = commentService.create(commentDTO);
-            return new ResponseEntity<>(new CommentDTO(savedComment), HttpStatus.CREATED);
+            CommentDTO savedComment = commentService.create(commentDTO);
+            return new ResponseEntity<>(savedComment, HttpStatus.CREATED);
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
