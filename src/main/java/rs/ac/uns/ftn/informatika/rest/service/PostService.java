@@ -4,18 +4,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.informatika.rest.domain.Greeting;
 import rs.ac.uns.ftn.informatika.rest.domain.Post;
+import rs.ac.uns.ftn.informatika.rest.domain.Profile;
+import rs.ac.uns.ftn.informatika.rest.domain.User;
 import rs.ac.uns.ftn.informatika.rest.dto.GreetingDTO;
 import rs.ac.uns.ftn.informatika.rest.dto.PostDTO;
 import rs.ac.uns.ftn.informatika.rest.repository.IPostRepository;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Service
 public class PostService implements IPostService {
 
     @Autowired
     private IPostRepository postRepository;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private ProfileService profileService;
 
     @Override
     public Collection<Post> findAll() {
@@ -29,6 +38,22 @@ public class PostService implements IPostService {
         return post;
     }
 
+    @Transactional
+    public List<PostDTO> findPostsForUser(Integer userId) {
+        List<Post> posts = postRepository.findAll();
+        List<PostDTO> filteredPostDTOs = new ArrayList<>();
+        for(Post post : posts) {
+            if(profileService.doesFollowPublisher(userId, post.getCreatorProfileId())){
+                PostDTO postDTO = new PostDTO(post);
+                Profile profile = profileService.getProfileByUserId(userId);
+                postDTO.setLiked(postRepository.doesUserProfileLikedPost(profile.getId(), post.getId()));
+                filteredPostDTOs.add(postDTO);
+            }
+        }
+
+        return filteredPostDTOs;
+    }
+
     @Override
     public Post create(PostDTO post) throws Exception {
         if (post.getId() != null) {
@@ -36,6 +61,35 @@ public class PostService implements IPostService {
         }
         Post savedPost = postRepository.save(new Post(post));
         return savedPost;
+    }
+
+    @Transactional
+    public PostDTO likePost(int postId, int profileId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException("Post not found with ID: " + postId));
+
+        postRepository.likePost(postId, profileId);
+
+        post.setLikesCount(post.getLikesCount() + 1);
+        postRepository.save(post);
+        PostDTO postDTO = new PostDTO(post);
+        postDTO.setLiked(true);
+        return postDTO;
+    }
+
+
+    @Transactional
+    public PostDTO unlikePost(int postId, int profileId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException("Post not found with ID: " + postId));
+
+        postRepository.unlikePost(postId, profileId);
+
+        post.setLikesCount(post.getLikesCount() - 1);
+        postRepository.save(post);
+        PostDTO postDTO = new PostDTO(post);
+        postDTO.setLiked(false);
+        return postDTO;
     }
 
     @Override
@@ -59,9 +113,9 @@ public class PostService implements IPostService {
         postRepository.deleteById(id);
     }
 
-    @Override
-    public Post deltePostById(Integer id){
-        return postRepository.deletePostById(id);
-    }
+//    @Override
+//    public void deltePostById(Integer id){
+//        postRepository.deletePostById(id);
+//    }
 
 }

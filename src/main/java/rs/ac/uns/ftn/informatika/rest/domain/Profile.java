@@ -36,6 +36,9 @@ public class Profile {
     @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL)
     private Set<Post> posts;
 
+//    @ManyToMany(mappedBy = "likedBy")
+//    private List<Post> likedPosts;
+
     public Profile() {
     }
 
@@ -44,6 +47,8 @@ public class Profile {
         this.id = id;
         this.user = user;
     }
+
+    public int getId() { return id; }
 
     public User getUser() {
         return user;

@@ -34,9 +34,17 @@ public class Post {
     @OneToMany(mappedBy = "post", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Comment> comments;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "profile_id")
     private Profile profile;
+
+    @ManyToMany()
+    @JoinTable(
+            name = "post_likes",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "profile_id")
+    )
+    private List<Profile> likedBy;
 
     public Post() {}
 
@@ -97,6 +105,7 @@ public class Post {
     public void setImage(String image) {
         this.image = image;
     }
+
     public List<Comment> getComments() {
         return comments;
     }
@@ -120,4 +129,6 @@ public class Post {
     public void decrementLikesCount() {
         this.likesCount--;
     }
+
+    public Integer getCreatorProfileId() { return this.profile != null && this.profile.getUser() != null ? this.profile.getUser().getId() : null;}
 }

@@ -37,9 +37,9 @@ public class Comment {
     public Comment(CommentDTO commentDTO) {
         this.content = commentDTO.getContent();
         this.creationDate = commentDTO.getCreationDate();
-//        this.creator = new User();
+//        this.creator = commentDTO.getCreator();
 //        this.creator.setId(commentDTO.getCreatorId());
-//        this.post = new Post();
+//        this.post = commentDTO.getPost();
 //        this.post.setId(commentDTO.getPostId());
     }
 

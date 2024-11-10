@@ -11,7 +11,10 @@ import rs.ac.uns.ftn.informatika.rest.repository.IPostRepository;
 import rs.ac.uns.ftn.informatika.rest.repository.IUserRepository;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -30,24 +33,34 @@ public class CommentService {
         postService = new PostService();
     }
 
-    public List<Comment> findCommentsForPost(int postId) {
+    public List<CommentDTO> findCommentsForPost(int postId) {
         List<Comment> comments = commentRepository.findAll();
-        List<Comment> commentsForPost = new ArrayList<>();
+        List<CommentDTO> commentDTOs = new ArrayList<>();
         for( Comment comment : comments ) {
             if(comment.getPostId().equals(postId)) {
-                commentsForPost.add(comment);
+                CommentDTO commentDTO = new CommentDTO(comment);
+                User user = userService.findById(comment.getCreatorId());
+                commentDTO.setCreatorName(user.getName());
+                commentDTO.setCreatorSurname(user.getSurname());
+                commentDTOs.add(commentDTO);
             }
         }
-        return commentsForPost;
+
+        return commentDTOs;
     }
 
     @Transactional
-    public Comment create(CommentDTO commentDTO) {
+    public CommentDTO create(CommentDTO commentDTO) {
         Post post = postService.findOne(commentDTO.getPostId());
         User user = userService.findById(commentDTO.getCreatorId());
         Comment comment = new Comment(commentDTO);
         comment.setCreator(user);
         comment.setPost(post);
-        return commentRepository.save(comment);
+        comment.setCreationDate(LocalDate.now());
+        Comment response = commentRepository.save(comment);
+        CommentDTO responseDTO = new CommentDTO(response);
+        responseDTO.setCreatorName(user.getName());
+        responseDTO.setCreatorSurname(user.getSurname());
+        return responseDTO;
     }
 }

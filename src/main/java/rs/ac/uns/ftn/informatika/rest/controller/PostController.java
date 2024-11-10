@@ -13,12 +13,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import rs.ac.uns.ftn.informatika.rest.domain.Comment;
 import rs.ac.uns.ftn.informatika.rest.domain.Post;
+import rs.ac.uns.ftn.informatika.rest.dto.CommentDTO;
 import rs.ac.uns.ftn.informatika.rest.service.PostService;
 import rs.ac.uns.ftn.informatika.rest.dto.PostDTO;
 
+import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Tag(name = "Post controller", description = "The posting API")
 @RestController
@@ -32,6 +37,29 @@ public class PostController {
     public ResponseEntity<Collection<Post>> getPosts(HttpSession httpSession){
         Collection<Post> posts = postService.findAll();
         return new ResponseEntity<Collection<Post>>(posts, HttpStatus.OK);
+    }
+
+    @GetMapping("/for-user/{id}")
+    public ResponseEntity<List<PostDTO>> getPostsForUser(@PathVariable Integer id){
+        List<PostDTO> postDTOs = postService.findPostsForUser(id);
+        return ResponseEntity.ok(postDTOs);
+    }
+
+//    @PatchMapping(value = "/like/{postId}", produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<PostDTO> likePost(@PathVariable Integer postId, @RequestParam Integer profileId){
+//        Post post = postService.likePost(postId, profileId);
+//        return ResponseEntity.ok(new PostDTO(post));
+//    }
+    @PutMapping(value = "/like/{postId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PostDTO> likePost(@PathVariable Integer postId, @RequestParam Integer profileId){
+        PostDTO postDTO = postService.likePost(postId, profileId);
+        return ResponseEntity.ok(postDTO);
+    }
+
+    @PutMapping(value = "/unlike/{postId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PostDTO> unlikePost(@PathVariable Integer postId, @RequestParam Integer profileId){
+        PostDTO postDTO = postService.unlikePost(postId, profileId);
+        return ResponseEntity.ok(postDTO);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -58,10 +86,12 @@ public class PostController {
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Post> deletePost(@Parameter(description = "Post id", required = true) @PathVariable("id") int id){
-        Post deletedPost = postService.deltePostById(id);
-        if(deletedPost == null){
-            return new ResponseEntity<Post>(HttpStatus.NOT_FOUND);
-        }
+        postService.delete(id);
         return new ResponseEntity<Post>(HttpStatus.OK);
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<String> handleEntityNotFoundException(EntityNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 }
