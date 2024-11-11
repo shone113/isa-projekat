@@ -4,12 +4,14 @@ package rs.ac.uns.ftn.informatika.rest.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -64,9 +66,14 @@ public class WebSecurityConfig {
 
     // Registrujemo authentication manager koji ce da uradi autentifikaciju korisnika za nas
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
-        return authConfig.getAuthenticationManager();
+    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+        return http.getSharedObject(AuthenticationManagerBuilder.class)
+                .userDetailsService(userDetailsService()) // Make sure your service is correctly implemented
+                .passwordEncoder(passwordEncoder()) // Check if you're using the right encoder
+                .and()
+                .build();
     }
+
 
     // Injektujemo implementaciju iz TokenUtils klase kako bismo mogli da koristimo njene metode za rad sa JWT u TokenAuthenticationFilteru
     @Autowired
@@ -83,12 +90,10 @@ public class WebSecurityConfig {
 
         // sve neautentifikovane zahteve obradi uniformno i posalji 401 gresku
         http.exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint);
-        http.authorizeRequests().antMatchers("/auth/**").permitAll()		// /auth/**
-                .antMatchers("/auth/login").permitAll()
-                .antMatchers("/login").permitAll()
+        http.authorizeRequests().antMatchers(HttpMethod.POST, "/auth/login").permitAll().antMatchers("/auth/**").permitAll()		// /auth/**
                 .antMatchers("/h2-console/**").permitAll()	// /h2-console/** ako se koristi H2 baza)
                 .antMatchers("/api/foo").permitAll()		// /api/foo
-                .antMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/v3/api-docs/**", "/webjars/**").permitAll()
                 // ukoliko ne zelimo da koristimo @PreAuthorize anotacije nad metodama kontrolera, moze se iskoristiti hasRole() metoda da se ogranici
                 // koji tip korisnika moze da pristupi odgovarajucoj ruti. Npr. ukoliko zelimo da definisemo da ruti 'admin' moze da pristupi
                 // samo korisnik koji ima rolu 'ADMIN', navodimo na sledeci nacin:
@@ -112,19 +117,19 @@ public class WebSecurityConfig {
     }
 
     //ne moze da nadje ovo webSecurityCustomizer...
-//    // metoda u kojoj se definisu putanje za igorisanje autentifikacije
-//    @Bean
-//    public WebSecurityCustomizer webSecurityCustomizer() {
-//        // Autentifikacija ce biti ignorisana ispod navedenih putanja (kako bismo ubrzali pristup resursima)
-//        // Zahtevi koji se mecuju za web.ignoring().antMatchers() nemaju pristup SecurityContext-u
-//        // Dozvoljena POST metoda na ruti /auth/login, za svaki drugi tip HTTP metode greska je 401 Unauthorized
-//        return (web) -> web.ignoring().antMatchers(HttpMethod.POST, "/auth/login")
-//
-//
-//                // Ovim smo dozvolili pristup statickim resursima aplikacije
-//                .antMatchers(HttpMethod.GET, "/", "/webjars/**", "/*.html", "favicon.ico",
-//                        "/**/*.html", "/**/*.css", "/**/*.js");
-//
-//    }
+    // metoda u kojoj se definisu putanje za igorisanje autentifikacije
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        // Autentifikacija ce biti ignorisana ispod navedenih putanja (kako bismo ubrzali pristup resursima)
+        // Zahtevi koji se mecuju za web.ignoring().antMatchers() nemaju pristup SecurityContext-u
+        // Dozvoljena POST metoda na ruti /auth/login, za svaki drugi tip HTTP metode greska je 401 Unauthorized
+        return (web) -> web.ignoring().antMatchers(HttpMethod.POST, "/auth/login")
+
+
+                // Ovim smo dozvolili pristup statickim resursima aplikacije
+                .antMatchers(HttpMethod.GET, "/", "/webjars/**", "/*.html", "favicon.ico",
+                        "/**/*.html", "/**/*.css", "/**/*.js");
+
+    }
 
 }

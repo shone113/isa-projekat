@@ -16,7 +16,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import rs.ac.uns.ftn.informatika.rest.domain.User;
-import rs.ac.uns.ftn.informatika.rest.service.UserService;
 import rs.ac.uns.ftn.informatika.rest.util.TokenUtils;
 
 // Filter koji ce presretati SVAKI zahtev klijenta ka serveru
@@ -29,7 +28,6 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     private TokenUtils tokenUtils;
 
     private UserDetailsService userDetailsService;
-    private UserService userService;
 
     protected final Log LOGGER = LogFactory.getLog(getClass());
 
@@ -58,9 +56,9 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
                 if (email != null) {
 
                     // 3. Preuzimanje korisnika na osnovu username-a
-                    User user = userService.getByEmail(email);
+                    UserDetails user = userDetailsService.loadUserByUsername(email);
                     // 4. Provera da li je prosledjeni token validan
-                    if (tokenUtils.validateToken(authToken, user)) {
+                    if (tokenUtils.validateToken(authToken, (User) user)) {
 
                         // 5. Kreiraj autentifikaciju
                         TokenBasedAuthentication authentication = new TokenBasedAuthentication(user);
