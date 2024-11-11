@@ -10,37 +10,38 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name="userTab")
+@Table(name="users")
 public class User implements UserDetails {
-    public enum Role_enum {
-        UNAUTHENTICATED_USER, AUTHENTICATED_USER, ADMINISTRATOR
-    }
+    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "name", nullable = false)
-    private String name;
-
-    @Column(name = "surname", nullable = false)
-    private String surname;
-
     @Column(name = "email", nullable = false, unique = true)
     private String email;
-//    private String username;
 
-    @JsonIgnore
-    @Column(name = "password", nullable = false)
+
+    @Column(name = "followers_count", columnDefinition = "INTEGER")
+    private Integer followersCount;
+
+    @Column(name = "following_count", columnDefinition = "INTEGER")
+    private Integer followingCount;
+
+    @Column(name = "is_activated")
+    private Boolean isActivated;
+
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "password")
     private String password;
 
-    @Column(name = "followersCount")
-    private int followersCount;
+    @Column(name = "posts_count")
+    private Integer postsCount;
 
-    @Column(name = "followingCount")
-    private int followingCount;
+    @Column(name = "surname")
+    private String surname;
 
-    @Column(name = "postsCount")
-    private int postsCount;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",
@@ -48,8 +49,6 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private List<Role> roles;
 
-    @Column(name = "isActivated")
-    private boolean isActivated = false;
     public User() {
     }
 

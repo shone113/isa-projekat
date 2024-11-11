@@ -84,6 +84,8 @@ public class WebSecurityConfig {
         // sve neautentifikovane zahteve obradi uniformno i posalji 401 gresku
         http.exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint);
         http.authorizeRequests().antMatchers("/auth/**").permitAll()		// /auth/**
+                .antMatchers("/auth/login").permitAll()
+                .antMatchers("/login").permitAll()
                 .antMatchers("/h2-console/**").permitAll()	// /h2-console/** ako se koristi H2 baza)
                 .antMatchers("/api/foo").permitAll()		// /api/foo
                 .antMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
@@ -96,7 +98,7 @@ public class WebSecurityConfig {
                 .anyRequest().authenticated().and()
                 // za development svrhe ukljuci konfiguraciju za CORS iz WebConfig klase
                 .cors().and()
-
+                .formLogin().loginPage("/login").permitAll().and()
                 // umetni custom filter TokenAuthenticationFilter kako bi se vrsila provera JWT tokena umesto cistih korisnickog imena i lozinke (koje radi BasicAuthenticationFilter)
                 .addFilterBefore(new TokenAuthenticationFilter(tokenUtils,  userDetailsService()), BasicAuthenticationFilter.class);
 

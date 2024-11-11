@@ -33,7 +33,7 @@ public class UserService {
             user.setRoles(roles);
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             User registerUser = userRepository.save(user);
-            activationCodeRepository.save(mailService.sendNotificaitionAsync(registerUser));
+            //activationCodeRepository.save(mailService.sendNotificaitionAsync(registerUser));
             return registerUser;
         }
         catch (Exception e) {
