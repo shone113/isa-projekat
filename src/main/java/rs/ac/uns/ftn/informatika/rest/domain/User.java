@@ -27,8 +27,8 @@ public class User implements UserDetails {
     @Column(name = "following_count", columnDefinition = "INTEGER")
     private Integer followingCount;
 
-    @Column(name = "is_activated")
-    private Boolean isActivated;
+    @Column(name = "activation_token", nullable = true)
+    private String activationToken;
 
     @Column(name = "name")
     private String name;
@@ -167,5 +167,13 @@ public class User implements UserDetails {
 
     public void setRoles(List<Role> roles) {
         this.roles = roles;
+    }
+
+    public String getActivationToken() {
+        return activationToken;
+    }
+
+    public void setActivationToken(String activationToken) {
+        this.activationToken = activationToken;
     }
 }

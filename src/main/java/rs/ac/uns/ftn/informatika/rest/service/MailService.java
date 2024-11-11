@@ -7,7 +7,6 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import rs.ac.uns.ftn.informatika.rest.domain.ActivationCode;
 import rs.ac.uns.ftn.informatika.rest.domain.User;
 
 import java.util.Random;
@@ -21,17 +20,17 @@ public class MailService {
     private Environment env;
 
     @Async
-    public ActivationCode sendNotificaitionAsync(User user) throws MailException, InterruptedException {
+    public void sendNotificaitionAsync(User user) throws MailException, InterruptedException {
         SimpleMailMessage mail = new SimpleMailMessage();
         mail.setTo(user.getEmail());
         mail.setFrom(env.getProperty("spring.mail.username"));
         mail.setSubject("OnlyBuns-Activate account");
-        String code = generateRandomString(6);
-        mail.setText("Hi " + user.getName() + ",\n\nThank you for registration. This is you activation code: " + code);
+//        String code = generateRandomString(6);
+        mail.setText("Hi " + user.getName() + ",\n\nThank you for registration. Click on this link to activate your account " +
+         "http://localhost:8080/auth/activate?token="+user.getActivationToken());
         javaMailSender.send(mail);
 
         System.out.println("Email poslat!");
-        return new ActivationCode(0, code, user.getEmail());
     }
 
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
