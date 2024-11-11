@@ -8,10 +8,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import rs.ac.uns.ftn.informatika.rest.domain.User;
 import rs.ac.uns.ftn.informatika.rest.dto.LoginDetailsDto;
@@ -69,7 +66,17 @@ public class AuthenticationController {
         }
 
         User user = this.userService.register(new User(userDto));
-
+        String jwt = tokenUtils.generateToken(user.getUsername());
+        userService.setActivationToken(user, jwt);
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
+
+    @GetMapping("/activate")
+    public ResponseEntity<String> activateAccount(@RequestParam("token") String token) {
+        boolean activated = this.userService.activateAccount(token);
+        if (!activated)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invalid token!");
+        return ResponseEntity.ok("The account has been successfully activated!");
+    }
+
 }

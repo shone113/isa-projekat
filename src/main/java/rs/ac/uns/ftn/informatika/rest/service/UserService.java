@@ -3,10 +3,8 @@ package rs.ac.uns.ftn.informatika.rest.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import rs.ac.uns.ftn.informatika.rest.domain.ActivationCode;
 import rs.ac.uns.ftn.informatika.rest.domain.Role;
 import rs.ac.uns.ftn.informatika.rest.domain.User;
-import rs.ac.uns.ftn.informatika.rest.repository.ActivationCodeRepository;
 import rs.ac.uns.ftn.informatika.rest.repository.IUserRepository;
 
 import java.util.List;
@@ -22,8 +20,6 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private RoleService roleService;
-    @Autowired
-    private ActivationCodeRepository activationCodeRepository;
 
     public User register(User user) {
         try {
@@ -33,7 +29,6 @@ public class UserService {
             user.setRoles(roles);
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             User registerUser = userRepository.save(user);
-            //activationCodeRepository.save(mailService.sendNotificaitionAsync(registerUser));
             return registerUser;
         }
         catch (Exception e) {
@@ -63,39 +58,26 @@ public class UserService {
         return userRepository.filterUsers(name, surname, email, minPostsRange, maxPostsRange);
     }
 
-    public User activateAccount(String code, String email) {
-        ActivationCode activationCode = activationCodeRepository.getActivationCodesByEmail(email);
-        if(!code.equals(activationCode.getCode()) || email.isEmpty() || email == null)
-            return null;
-        User user = userRepository.getUserByEmail(email);
-        activationCodeRepository.deleteById(activationCode.getId());
-        return userRepository.save(user);
-    }
-
-    public User login(String email, String password) {
-        User user = userRepository.getUserByEmail(email);
-//        if(user == null || user.getRole() != User.Role.AUTHENTICATED_USER)
-//            return null;
-//        if(!password.equals(user.getPassword()))
-//            return null;
-        return user;
-    }
-
-    public void sendActivateCode(String email) {
-        User user = userRepository.getUserByEmail(email);
-        if(user == null)
-            return;
-        ActivationCode activationCode = activationCodeRepository.getActivationCodesByEmail(email);
-        if(activationCode == null)
-            return;
-        activationCodeRepository.deleteById(activationCode.getId());
-        try {
-            activationCodeRepository.save(mailService.sendNotificaitionAsync(user));
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();  // Restore the interrupt flag
-            return;
+    public void setActivationToken(User user, String token) {
+        try{
+            user.setActivationToken(token);
+            userRepository.save(user);
+            mailService.sendNotificaitionAsync(user);
+        }catch (Exception e) {
+            e.printStackTrace();
         }
+
     }
+
+    public boolean activateAccount(String token) {
+        User user = userRepository.getUsersByActivationToken(token);
+        if(user == null)
+            return false;
+        user.setActivationToken(null);
+        userRepository.save(user);
+        return true;
+    }
+
     public List<User> getSortedByFollowingCountAsc(){
         return userRepository.getSortedByFollowingCountAsc();
     }

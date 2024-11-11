@@ -56,4 +56,5 @@ public interface IUserRepository  extends JpaRepository<User, Integer> {
     @Query("select u from User as u order by u.email desc")
     public List<User> getSortedByEmailDesc();
 
+    public User getUsersByActivationToken(String activationToken);
 }

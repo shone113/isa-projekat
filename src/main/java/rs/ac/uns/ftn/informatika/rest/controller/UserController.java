@@ -18,16 +18,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping(consumes = "application/json")
-    public ResponseEntity<UserDto> registerUser(@RequestBody UserDto userDto) {
-        User user = new User(userDto);
-        user = userService.register(user);
-        if (user == null) {
-            return ResponseEntity.badRequest().build();
-        }
-        return ResponseEntity.ok(new UserDto(user));
-    }
-
     @GetMapping()
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserDto>> getAllUsers() {
@@ -111,28 +101,19 @@ public class UserController {
         return ResponseEntity.ok(userDtos);
     }
 
-    @GetMapping("activate/{email}/{code}")
-    public ResponseEntity<UserDto> activateAccount(@PathVariable String code, @PathVariable String email) {
-        User user = userService.activateAccount(code, email);
-        if (user == null) {
-            return ResponseEntity.badRequest().build();
-        }
-        return ResponseEntity.ok(new UserDto(user));
-    }
+//    @GetMapping("activate/{email}/{code}")
+//    public ResponseEntity<UserDto> activateAccount(@PathVariable String code, @PathVariable String email) {
+//        User user = userService.activateAccount(code, email);
+//        if (user == null) {
+//            return ResponseEntity.badRequest().build();
+//        }
+//        return ResponseEntity.ok(new UserDto(user));
+//    }
 
-    @PostMapping("/login")
-    public ResponseEntity<UserDto> login(@RequestBody LoginDetailsDto loginDetailsDto) {
-        User user = userService.login(loginDetailsDto.getEmail(), loginDetailsDto.getPassword());
-        if(user == null)
-            return ResponseEntity.notFound().build();
-        if(!loginDetailsDto.getPassword().equals(user.getPassword()))
-            return ResponseEntity.badRequest().build();
-        return ResponseEntity.ok(new UserDto(user));
-    }
-
-    @GetMapping("/code/{email}")
-    public ResponseEntity<String> sendActivationCode(@PathVariable String email) {
-        userService.sendActivateCode(email);
-        return ResponseEntity.ok("");
-    }
+//
+//    @GetMapping("/code/{email}")
+//    public ResponseEntity<String> sendActivationCode(@PathVariable String email) {
+//        userService.sendActivateCode(email);
+//        return ResponseEntity.ok("");
+//    }
 }
