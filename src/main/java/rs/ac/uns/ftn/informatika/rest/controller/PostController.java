@@ -73,7 +73,7 @@ public class PostController {
         }
     }
 
-    @PutMapping(value="/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value="/update/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Post> updatePost(@RequestBody PostDTO post, @PathVariable int id){
         try{
             Post updatedPost = postService.update(post, id);
