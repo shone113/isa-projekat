@@ -28,7 +28,7 @@ public class PostService implements IPostService {
 
     @Override
     public Collection<Post> findAll() {
-        Collection<Post> posts = postRepository.findAll();
+        Collection<Post> posts = postRepository.findAllPostsOrderByCreatedAtDesc();
         return posts;
     }
 

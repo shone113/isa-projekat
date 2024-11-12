@@ -35,7 +35,6 @@ public class PostController {
     private PostService postService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Collection<Post>> getPosts(HttpSession httpSession){
         Collection<Post> posts = postService.findAll();
         return new ResponseEntity<Collection<Post>>(posts, HttpStatus.OK);
