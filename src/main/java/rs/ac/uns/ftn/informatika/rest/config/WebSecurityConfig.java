@@ -91,6 +91,8 @@ public class WebSecurityConfig {
         // sve neautentifikovane zahteve obradi uniformno i posalji 401 gresku
         http.exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint);
         http.authorizeRequests().antMatchers(HttpMethod.POST, "/auth/login").permitAll().antMatchers("/auth/**").permitAll()		// /auth/**
+                .antMatchers(HttpMethod.GET, "/api/post").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/comment//by-post-id/{id}").permitAll()
                 .antMatchers("/h2-console/**").permitAll()	// /h2-console/** ako se koristi H2 baza)
                 .antMatchers("/api/foo").permitAll()		// /api/foo
                 .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/v3/api-docs/**", "/webjars/**").permitAll()
