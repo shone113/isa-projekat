@@ -36,6 +36,7 @@ public class UserController {
     }
 
     @GetMapping("/registered")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserDto>> getRegistratedUsers() {
         List<User> registratedUsers = userService.findRegistratedUsers();
         List<UserDto> userDtos = new ArrayList<>();
@@ -46,6 +47,7 @@ public class UserController {
     }
 
     @GetMapping("/filter")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserDto>> getRegistratedUsers(
 //            @PathVariable String name,
             @RequestParam(required = false) String name,
@@ -62,6 +64,7 @@ public class UserController {
     }
 
     @GetMapping("/sort/following-count-asc")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserDto>> getSortedByFollowingCountAsc() {
         List<User> filteredUsers = userService.getSortedByFollowingCountAsc();
         List<UserDto> userDtos = new ArrayList<>();
@@ -72,6 +75,7 @@ public class UserController {
     }
 
     @GetMapping("/sort/following-count-desc")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserDto>> getSortedByFollowingCountDesc() {
         List<User> filteredUsers = userService.getSortedByFollowingCountDesc();
         List<UserDto> userDtos = new ArrayList<>();
@@ -82,6 +86,7 @@ public class UserController {
     }
 
     @GetMapping("/sort/email-asc")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserDto>> getSortedByEmailAsc() {
         List<User> filteredUsers = userService.getSortedByEmailAsc();
         List<UserDto> userDtos = new ArrayList<>();
@@ -92,6 +97,7 @@ public class UserController {
     }
 
     @GetMapping("/sort/email-desc")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserDto>> getSortedByEmailDesc() {
         List<User> filteredUsers = userService.getSortedByEmailDesc();
         List<UserDto> userDtos = new ArrayList<>();

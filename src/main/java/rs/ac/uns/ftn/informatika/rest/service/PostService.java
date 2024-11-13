@@ -92,13 +92,17 @@ public class PostService implements IPostService {
         return postDTO;
     }
 
-    @Override
     @Transactional
-    public Post update(PostDTO post, Integer id) throws Exception {
-        Post postToUpdate = findOne(id);
+    public Post update(PostDTO post, Integer postId, Integer userId) throws Exception {
+        Post postToUpdate = findOne(postId);
         if (postToUpdate == null) {
             throw new Exception("Trazeni entitet nije pronadjen.");
         }
+        Integer creatorProfileId = profileService.getProfileByUserId(userId).getId();
+        if(postToUpdate.getCreatorProfileId() != creatorProfileId){
+            throw new Exception("Unauthenticated user");
+        }
+
         postToUpdate.setDescription(post.getDescription());
         postToUpdate.setLikesCount(post.getLikesCount());
 //        postToUpdate.setPublishingLocationId(post.getPublishingLocationId());
@@ -108,9 +112,12 @@ public class PostService implements IPostService {
         return postToUpdate;
     }
 
-    @Override
-    public void delete(Integer id) {
-        postRepository.deleteById(id);
+    public void delete(Integer postId, Integer creatorUserId) {
+        Integer creatorProfileId = profileService.getProfileByUserId(creatorUserId).getId();
+        Post post = postRepository.findById(postId).get();
+        if(post.getCreatorProfileId() == creatorProfileId){
+            postRepository.deleteById(postId);
+        }
     }
 
 //    @Override

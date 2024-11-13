@@ -98,4 +98,5 @@ public class PostDTO {
     }
     public void setLiked(boolean liked) { this.liked = liked; }
     public boolean getLiked() { return liked; }
+    public Integer getCreatorProfileId(){ return this.creatorProfileId; }
 }
