@@ -32,6 +32,22 @@ public class PostService implements IPostService {
         return posts;
     }
 
+    public List<PostDTO> findAllForLoggedUser(Integer userId) {
+        List<Post> posts = postRepository.findAllPostsOrderByCreatedAtDesc();
+        User user = userService.findById(userId);
+        List<PostDTO> filteredPostDTOs = new ArrayList<>();
+        for(Post post : posts) {
+            PostDTO postDTO = new PostDTO(post);
+            Profile profile = profileService.getProfileByUserId(userId);
+            postDTO.setLiked(postRepository.doesUserProfileLikedPost(profile.getId(), post.getId()));
+            postDTO.setCreatorName(user.getName());
+            postDTO.setCreatorSurname(user.getSurname());
+            filteredPostDTOs.add(postDTO);
+        }
+
+        return filteredPostDTOs;
+    }
+
     @Override
     public Post findOne(Integer id) {
         Post post = postRepository.getOne(id);
@@ -40,13 +56,16 @@ public class PostService implements IPostService {
 
     @Transactional
     public List<PostDTO> findPostsForUser(Integer userId) {
-        List<Post> posts = postRepository.findAll();
+        List<Post> posts = postRepository.findAllPostsOrderByCreatedAtDesc();
+        User user = userService.findById(userId);
         List<PostDTO> filteredPostDTOs = new ArrayList<>();
         for(Post post : posts) {
             if(profileService.doesFollowPublisher(userId, post.getCreatorProfileId())){
                 PostDTO postDTO = new PostDTO(post);
                 Profile profile = profileService.getProfileByUserId(userId);
                 postDTO.setLiked(postRepository.doesUserProfileLikedPost(profile.getId(), post.getId()));
+                postDTO.setCreatorName(user.getName());
+                postDTO.setCreatorSurname(user.getSurname());
                 filteredPostDTOs.add(postDTO);
             }
         }

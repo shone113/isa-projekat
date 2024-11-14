@@ -46,6 +46,15 @@ public class PostController {
         return new ResponseEntity<Collection<Post>>(posts, HttpStatus.OK);
     }
 
+    @GetMapping(value="/all-for-logged-user",produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<List<PostDTO>> getPostsForLoggedUser(HttpSession httpSession){
+        Authentication token = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) token.getPrincipal();
+        List<PostDTO> postDTOs = postService.findAllForLoggedUser(user.getId());
+        return ResponseEntity.ok(postDTOs);
+    }
+
     @GetMapping("/for-user/{id}")
     public ResponseEntity<List<PostDTO>> getPostsForUser(@PathVariable Integer id){
         List<PostDTO> postDTOs = postService.findPostsForUser(id);
