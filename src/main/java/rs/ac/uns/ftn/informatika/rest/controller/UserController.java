@@ -1,6 +1,9 @@
 package rs.ac.uns.ftn.informatika.rest.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -8,6 +11,7 @@ import rs.ac.uns.ftn.informatika.rest.domain.User;
 import rs.ac.uns.ftn.informatika.rest.dto.LoginDetailsDto;
 import rs.ac.uns.ftn.informatika.rest.dto.UserDto;
 import rs.ac.uns.ftn.informatika.rest.service.UserService;
+import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +31,15 @@ public class UserController {
             userDtos.add(new UserDto(user));
         }
         return ResponseEntity.ok(userDtos);
+    }
+
+    @GetMapping("/paged")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Page<UserDto>> getUsersPaged(Pageable page) {
+
+        Page<User> users = userService.findAll(page);
+        Page<UserDto> userDtos = users.map(user -> new UserDto(user));
+        return new ResponseEntity<>(userDtos, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -63,6 +76,21 @@ public class UserController {
         return ResponseEntity.ok(userDtos);
     }
 
+    @GetMapping("/filter/paged")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Page<UserDto>> getRegistratedUsersPaged(
+//            @PathVariable String name,
+            Pageable page,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String surname,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) Integer minPostsRange,
+            @RequestParam(required = false) Integer maxPostsRange) {
+        Page<User> filteredUsers = userService.filterUsersPaged(page, name, surname, email, minPostsRange, maxPostsRange);
+        Page<UserDto> userDtos = filteredUsers.map(user -> new UserDto(user));
+        return new ResponseEntity<>(userDtos, HttpStatus.OK);
+    }
+
     @GetMapping("/sort/following-count-asc")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserDto>> getSortedByFollowingCountAsc() {
@@ -72,6 +100,14 @@ public class UserController {
             userDtos.add(new UserDto(user));
         }
         return ResponseEntity.ok(userDtos);
+    }
+
+    @GetMapping("/sort/following-count-asc/paged")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Page<UserDto>> getSortedByFollowingCountAscPaged(Pageable page) {
+        Page<User> sortedUsers = userService.getSortedByFollowingCountAscPaged(page);
+        Page<UserDto> userDtos = sortedUsers.map(user -> new UserDto(user));
+        return new ResponseEntity<>(userDtos, HttpStatus.OK);
     }
 
     @GetMapping("/sort/following-count-desc")
@@ -85,6 +121,14 @@ public class UserController {
         return ResponseEntity.ok(userDtos);
     }
 
+    @GetMapping("/sort/following-count-desc/paged")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Page<UserDto>> getSortedByFollowingCountDescPaged(Pageable page) {
+        Page<User> sortedUsers = userService.getSortedByFollowingCountDescPaged(page);
+        Page<UserDto> userDtos = sortedUsers.map(user -> new UserDto(user));
+        return new ResponseEntity<>(userDtos, HttpStatus.OK);
+    }
+
     @GetMapping("/sort/email-asc")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserDto>> getSortedByEmailAsc() {
@@ -96,6 +140,14 @@ public class UserController {
         return ResponseEntity.ok(userDtos);
     }
 
+    @GetMapping("/sort/email-asc/paged")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Page<UserDto>> getSortedByEmailAscPaged(Pageable page) {
+        Page<User> sortedUsers = userService.getSortedByEmailAscPaged(page);
+        Page<UserDto> userDtos = sortedUsers.map(user -> new UserDto(user));
+        return new ResponseEntity<>(userDtos, HttpStatus.OK);
+    }
+
     @GetMapping("/sort/email-desc")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserDto>> getSortedByEmailDesc() {
@@ -105,6 +157,14 @@ public class UserController {
             userDtos.add(new UserDto(user));
         }
         return ResponseEntity.ok(userDtos);
+    }
+
+    @GetMapping("/sort/email-desc/paged")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Page<UserDto>> getSortedByEmailDesc(Pageable page) {
+        Page<User> sortedUsers = userService.getSortedByEmailDescPaged(page);
+        Page<UserDto> userDtos = sortedUsers.map(user -> new UserDto(user));
+        return new ResponseEntity<>(userDtos, HttpStatus.OK);
     }
 
 //    @GetMapping("activate/{email}/{code}")
