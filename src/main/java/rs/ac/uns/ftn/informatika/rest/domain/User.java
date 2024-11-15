@@ -27,7 +27,7 @@ public class User implements UserDetails {
     @Column(name = "following_count", columnDefinition = "INTEGER")
     private Integer followingCount;
 
-    @Column(name = "activation_token", nullable = true)
+    @Column(name = "activation_token", nullable = true, length = 512)
     private String activationToken;
 
     @Column(name = "name")

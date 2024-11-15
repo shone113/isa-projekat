@@ -61,16 +61,16 @@ public class TokenUtils {
      */
     public String generateToken(User user) {
 
-        Profile profile = profileService.getProfileByUserId(user.getId());
         return Jwts.builder()
                 .setIssuer(APP_NAME)
                 .setSubject(user.getEmail())
-                .claim("user", user)
-                .claim("profileId", profile.getId())
+                .claim("userId", user.getId().toString())
+                .claim("role", user.getRoles().get(0).getName())
                 .setAudience(generateAudience())
                 .setIssuedAt(new Date())
                 .setExpiration(generateExpirationDate())
                 .signWith(SIGNATURE_ALGORITHM, SECRET).compact();
+
 
 
         // moguce je postavljanje proizvoljnih podataka u telo JWT tokena pozivom funkcije .claim("key", value), npr. .claim("role", user.getRole())

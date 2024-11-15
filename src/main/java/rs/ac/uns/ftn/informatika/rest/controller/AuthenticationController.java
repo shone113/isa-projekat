@@ -10,11 +10,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
+import rs.ac.uns.ftn.informatika.rest.domain.Profile;
 import rs.ac.uns.ftn.informatika.rest.domain.User;
 import rs.ac.uns.ftn.informatika.rest.dto.LoginDetailsDto;
 import rs.ac.uns.ftn.informatika.rest.dto.UserDto;
 import rs.ac.uns.ftn.informatika.rest.dto.UserTokenState;
 import rs.ac.uns.ftn.informatika.rest.exaption.ResourceConflictException;
+import rs.ac.uns.ftn.informatika.rest.service.ProfileService;
 import rs.ac.uns.ftn.informatika.rest.service.UserService;
 import rs.ac.uns.ftn.informatika.rest.util.TokenUtils;
 
@@ -32,6 +34,9 @@ public class AuthenticationController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ProfileService profileService;
 
     // Prvi endpoint koji pogadja korisnik kada se loguje.
     // Tada zna samo svoje korisnicko ime i lozinku i to prosledjuje na backend.
@@ -74,6 +79,7 @@ public class AuthenticationController {
         }
 
         User user = this.userService.register(new User(userDto));
+        Profile profile = profileService.create(user);
         String jwt = tokenUtils.generateToken(user);
         userService.setActivationToken(user, jwt);
         return new ResponseEntity<>(user, HttpStatus.CREATED);

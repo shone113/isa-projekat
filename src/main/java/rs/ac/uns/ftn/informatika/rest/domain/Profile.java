@@ -48,7 +48,7 @@ public class Profile {
         this.user = user;
     }
 
-    public int getId() { return id; }
+    public Integer getId() { return id; }
 
     public User getUser() {
         return user;
