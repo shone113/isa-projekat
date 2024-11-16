@@ -56,16 +56,17 @@ public class TokenUtils {
     /**
      * Funkcija za generisanje JWT tokena.
      *
-     * @param user Korisničko ime korisnika kojem se token izdaje
+     * @param user Korisnik kojem se token izdaje
      * @return JWT token
      */
     public String generateToken(User user) {
-
+        Integer profileId = profileService.getProfileByUserId(user.getId()).getId();
         return Jwts.builder()
                 .setIssuer(APP_NAME)
                 .setSubject(user.getEmail())
                 .claim("userId", user.getId().toString())
                 .claim("role", user.getRoles().get(0).getName())
+                .claim("profileId", profileId.toString())
                 .setAudience(generateAudience())
                 .setIssuedAt(new Date())
                 .setExpiration(generateExpirationDate())
