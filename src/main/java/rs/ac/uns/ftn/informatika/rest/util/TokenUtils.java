@@ -4,9 +4,13 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import rs.ac.uns.ftn.informatika.rest.domain.Profile;
 import rs.ac.uns.ftn.informatika.rest.domain.User;
+import rs.ac.uns.ftn.informatika.rest.service.ProfileService;
+import rs.ac.uns.ftn.informatika.rest.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
@@ -31,6 +35,9 @@ public class TokenUtils {
     @Value("Authorization")
     private String AUTH_HEADER;
 
+    @Autowired
+    private ProfileService profileService;
+
     // Moguce je generisati JWT za razlicite klijente (npr. web i mobilni klijenti nece imati isto trajanje JWT,
     // JWT za mobilne klijente ce trajati duze jer se mozda aplikacija redje koristi na taj nacin)
     // Radi jednostavnosti primera, necemo voditi racuna o uređaju sa kojeg zahtev stiže.
@@ -49,17 +56,22 @@ public class TokenUtils {
     /**
      * Funkcija za generisanje JWT tokena.
      *
-     * @param email Korisničko ime korisnika kojem se token izdaje
+     * @param user Korisnik kojem se token izdaje
      * @return JWT token
      */
-    public String generateToken(String email) {
+    public String generateToken(User user) {
+        Integer profileId = profileService.getProfileByUserId(user.getId()).getId();
         return Jwts.builder()
                 .setIssuer(APP_NAME)
-                .setSubject(email)
+                .setSubject(user.getEmail())
+                .claim("userId", user.getId().toString())
+                .claim("role", user.getRoles().get(0).getName())
+                .claim("profileId", profileId.toString())
                 .setAudience(generateAudience())
                 .setIssuedAt(new Date())
                 .setExpiration(generateExpirationDate())
                 .signWith(SIGNATURE_ALGORITHM, SECRET).compact();
+
 
 
         // moguce je postavljanje proizvoljnih podataka u telo JWT tokena pozivom funkcije .claim("key", value), npr. .claim("role", user.getRole())

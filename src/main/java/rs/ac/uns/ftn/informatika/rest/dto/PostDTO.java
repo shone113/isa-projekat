@@ -17,10 +17,12 @@ public class PostDTO {
     private List<Comment> comments;
     private Integer creatorProfileId;
     private boolean liked;
+    private String creatorName;
+    private String creatorSurname;
 
     public PostDTO() {}
 
-    public PostDTO(Integer id, String description, int likesCount, int creatorId){
+    public PostDTO(Integer id, String description, int likesCount, int creatorId, String creatorName, String creatorSurname){
         super();
         this.id = id;
         this.description = description;
@@ -30,6 +32,8 @@ public class PostDTO {
         this.image = "";
         this.comments = new ArrayList<>();
         this.creatorProfileId = creatorId;
+        this.creatorName = creatorName;
+        this.creatorSurname = creatorSurname;
     }
     public PostDTO(Post post) {
         this.id = post.getId();
@@ -40,6 +44,8 @@ public class PostDTO {
         this.image = post.getImage();
         this.comments = post.getComments();
         this.creatorProfileId = post.getCreatorProfileId() != null ? post.getCreatorProfileId() : null;
+        this.creatorName = "";
+        this.creatorSurname = "";
     }
     public Integer getId() {
         return id;
@@ -98,4 +104,9 @@ public class PostDTO {
     }
     public void setLiked(boolean liked) { this.liked = liked; }
     public boolean getLiked() { return liked; }
+    public Integer getCreatorProfileId(){ return this.creatorProfileId; }
+    public void setCreatorName(String creatorName){ this.creatorName = creatorName; }
+    public void setCreatorSurname(String creatorSurname){ this.creatorSurname = creatorSurname; }
+    public String getCreatorName(){ return this.creatorName; }
+    public String getCreatorSurname(){ return this.creatorSurname; }
 }
