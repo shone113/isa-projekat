@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.informatika.rest.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.context.annotation.Bean;
 
 import javax.persistence.*;
@@ -23,6 +24,7 @@ public class Profile {
             joinColumns = @JoinColumn(name = "profile_id"),
             inverseJoinColumns = @JoinColumn(name = "following_profile_id")
     )
+    @JsonIgnore
     private Set<Profile> followingProfiles;
 
     @ManyToMany
@@ -31,6 +33,7 @@ public class Profile {
             joinColumns = @JoinColumn(name = "profile_id"),
             inverseJoinColumns = @JoinColumn(name = "follower_profile_id")
     )
+    @JsonIgnore
     private Set<Profile> followerProfiles;
 
     @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL)

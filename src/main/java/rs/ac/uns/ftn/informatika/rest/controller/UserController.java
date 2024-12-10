@@ -166,20 +166,4 @@ public class UserController {
         Page<UserDto> userDtos = sortedUsers.map(user -> new UserDto(user));
         return new ResponseEntity<>(userDtos, HttpStatus.OK);
     }
-
-//    @GetMapping("activate/{email}/{code}")
-//    public ResponseEntity<UserDto> activateAccount(@PathVariable String code, @PathVariable String email) {
-//        User user = userService.activateAccount(code, email);
-//        if (user == null) {
-//            return ResponseEntity.badRequest().build();
-//        }
-//        return ResponseEntity.ok(new UserDto(user));
-//    }
-
-//
-//    @GetMapping("/code/{email}")
-//    public ResponseEntity<String> sendActivationCode(@PathVariable String email) {
-//        userService.sendActivateCode(email);
-//        return ResponseEntity.ok("");
-//    }
 }

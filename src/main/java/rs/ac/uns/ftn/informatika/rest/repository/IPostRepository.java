@@ -8,6 +8,7 @@ import rs.ac.uns.ftn.informatika.rest.domain.Post;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Set;
 
 public interface IPostRepository extends JpaRepository<Post, Integer> {
 
@@ -28,4 +29,6 @@ public interface IPostRepository extends JpaRepository<Post, Integer> {
     boolean doesUserProfileLikedPost(@Param("profileId") Integer profileId, @Param("postId") Integer postId);
     @Query("SELECT p FROM Post p ORDER BY p.publishingDate DESC")
     List<Post> findAllPostsOrderByCreatedAtDesc();
+
+    Set<Post> findPostByProfileId(Integer profileId);
 }

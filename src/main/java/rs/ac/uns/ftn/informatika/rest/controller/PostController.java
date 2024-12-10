@@ -56,7 +56,7 @@ public class PostController {
     }
 
     @GetMapping("/for-user/{id}")
-    public ResponseEntity<List<PostDTO>> getPostsForUser(@PathVariable Integer id){
+        public ResponseEntity<List<PostDTO>> getPostsForUser(@PathVariable Integer id){
         List<PostDTO> postDTOs = postService.findPostsForUser(id);
         return ResponseEntity.ok(postDTOs);
     }
