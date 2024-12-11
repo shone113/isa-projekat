@@ -85,4 +85,7 @@ public interface IUserRepository  extends JpaRepository<User, Integer> {
     public Page<User> getSortedByEmailDescPaged(Pageable page);
 
     public User getUsersByActivationToken(String activationToken);
+
+    @Query("select u from User u")
+    public List<User> getAllUsers(Pageable pageable);
 }

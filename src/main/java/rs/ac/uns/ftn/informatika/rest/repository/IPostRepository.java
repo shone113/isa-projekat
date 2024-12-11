@@ -1,14 +1,15 @@
 package rs.ac.uns.ftn.informatika.rest.repository;
 
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import rs.ac.uns.ftn.informatika.rest.domain.Post;
-
+import org.springframework.data.domain.Pageable;
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 
 public interface IPostRepository extends JpaRepository<Post, Integer> {
 
@@ -30,5 +31,15 @@ public interface IPostRepository extends JpaRepository<Post, Integer> {
     @Query("SELECT p FROM Post p ORDER BY p.publishingDate DESC")
     List<Post> findAllPostsOrderByCreatedAtDesc();
 
-    Set<Post> findPostByProfileId(Integer profileId);
+    @Query("SELECT count(p) FROM Post  p")
+    int countAllPosts();
+
+    @Query("SELECT count(p) FROM Post p WHERE p.publishingDate > :date")
+    int countPostsInLastMonth(@Param("date") LocalDate date);
+
+    @Query("SELECT p FROM Post p ORDER BY p.likesCount DESC")
+    List<Post> findMostLikedPosts(Pageable pageable);
+
+    @Query("SELECT p FROM Post p WHERE p.publishingDate > :date ORDER BY p.likesCount DESC")
+    List<Post> findMostLikedPostsInLastWeek(@Param("date") LocalDate date, Pageable pageable);
 }

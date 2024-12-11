@@ -1,17 +1,18 @@
 package rs.ac.uns.ftn.informatika.rest.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import rs.ac.uns.ftn.informatika.rest.domain.Greeting;
 import rs.ac.uns.ftn.informatika.rest.domain.Post;
 import rs.ac.uns.ftn.informatika.rest.domain.Profile;
 import rs.ac.uns.ftn.informatika.rest.domain.User;
-import rs.ac.uns.ftn.informatika.rest.dto.GreetingDTO;
 import rs.ac.uns.ftn.informatika.rest.dto.PostDTO;
 import rs.ac.uns.ftn.informatika.rest.repository.IPostRepository;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -139,9 +140,23 @@ public class PostService implements IPostService {
         }
     }
 
-//    @Override
-//    public void deltePostById(Integer id){
-//        postRepository.deletePostById(id);
-//    }
+    public Integer totalNumberOfPosts() {
+        return postRepository.countAllPosts();
+    }
 
+    public int totalNumberOfPostsInLastMonth(){
+        LocalDate date = LocalDate.now().minusMonths(1);
+        return postRepository.countPostsInLastMonth(date);
+    }
+
+    public List<Post> mostPopularPosts() {
+        Pageable pageable = PageRequest.of(0, 10);
+        return postRepository.findMostLikedPosts(pageable);
+    }
+
+    public List<Post> mostPopularPostsInLastWeek() {
+        Pageable pageable = PageRequest.of(0, 5);
+        LocalDate date = LocalDate.now().minusDays(7);
+        return postRepository.findMostLikedPostsInLastWeek(date, pageable);
+    }
 }

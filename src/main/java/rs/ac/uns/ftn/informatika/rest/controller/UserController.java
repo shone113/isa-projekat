@@ -166,4 +166,15 @@ public class UserController {
         Page<UserDto> userDtos = sortedUsers.map(user -> new UserDto(user));
         return new ResponseEntity<>(userDtos, HttpStatus.OK);
     }
+
+    @GetMapping("/most-actived-users")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<List<UserDto>> getMostActivedUsers(){
+        List<User> users = userService.getAllUsers();
+        List<UserDto> userDtos = new ArrayList<>();
+        for (User user : users) {
+            userDtos.add(new UserDto(user));
+        }
+        return ResponseEntity.ok(userDtos);
+    }
 }
