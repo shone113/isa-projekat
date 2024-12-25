@@ -28,7 +28,7 @@ public class UserDto {
         this.surname = user.getSurname();
         this.email = user.getEmail();
         this.password = user.getPassword();
-        this.followersCount = user.getFollowers();
+        this.followersCount = user.getFollowersCount();
         this.followingCount = user.getFollowingCount();
         this.postsCount = user.getPostsCount();
     }

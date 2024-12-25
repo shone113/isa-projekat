@@ -22,4 +22,8 @@ public interface IProfileRepository extends JpaRepository<Profile, Integer> {
     @Query("SELECT p.followerProfiles FROM Profile p WHERE p.id = :profileId")
     List<Profile> findFollowerProfiles(@Param("profileId") Integer profileId);
 
+    @Query("SELECT p.user.id FROM Profile p WHERE p.id = :profileId")
+    Profile findUserIdByProfileId(@Param("profileId") Integer profileId);
+
+
 }

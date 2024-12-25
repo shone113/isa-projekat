@@ -143,9 +143,9 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public int getFollowers() {return followersCount;}
+    public int getFollowersCount() {return followersCount;}
 
-    public void setFollowers(int followersCount) {this.followersCount = followersCount;}
+    public void setFollowersCount(int followersCount) {this.followersCount = followersCount;}
 
     public int getFollowingCount() {return followingCount;}
 
