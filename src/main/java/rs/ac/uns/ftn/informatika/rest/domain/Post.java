@@ -130,5 +130,6 @@ public class Post {
         this.likesCount--;
     }
 
-    public Integer getCreatorProfileId() { return this.profile != null && this.profile.getUser() != null ? this.profile.getUser().getId() : null;}
+    //public Integer getCreatorProfileId() { return this.profile != null && this.profile.getUser() != null ? this.profile.getUser().getId() : null;}
+    public Integer getCreatorProfileId() { return this.profile.getId(); }
 }

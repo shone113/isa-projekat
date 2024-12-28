@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import rs.ac.uns.ftn.informatika.rest.domain.Comment;
 import rs.ac.uns.ftn.informatika.rest.domain.Post;
 import org.springframework.data.domain.Pageable;
 import javax.transaction.Transactional;
@@ -42,4 +43,11 @@ public interface IPostRepository extends JpaRepository<Post, Integer> {
 
     @Query("SELECT p FROM Post p WHERE p.publishingDate > :date ORDER BY p.likesCount DESC")
     List<Post> findMostLikedPostsInLastWeek(@Param("date") LocalDate date, Pageable pageable);
+
+    @Query("SELECT p FROM Post p WHERE p.publishingDate >= :startDate")
+    List<Post> findPostsFromLastWeek(@Param("startDate") LocalDate startDate);
+
+    @Query("SELECT p FROM Post p WHERE p.publishingDate BETWEEN :startDate AND :endDate")
+    List<Post> findPostsFromDateRange(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+
 }

@@ -27,10 +27,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.time.DayOfWeek;
+import java.time.Month;
+import java.util.*;
 
 @Tag(name = "Post controller", description = "The posting API")
 @RestController
@@ -147,6 +146,24 @@ public class PostController {
     public ResponseEntity<List<Post>> getMostPopularPostsInlastWeek(){
         List<Post> result = postService.mostPopularPostsInLastWeek();
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @GetMapping("/analytics/weekly")
+    public  ResponseEntity<Map<DayOfWeek, Integer>> getWeeklyStatystic() {
+        Map<DayOfWeek, Integer> weeklyStatystic = postService.getWeeklyStatystic();
+        return ResponseEntity.ok(weeklyStatystic);
+    }
+
+    @GetMapping("/analytics/monthly")
+    public  ResponseEntity<Map<Integer, Integer>> getMonthlyStatystic() {
+        Map<Integer, Integer> monthlyStatystic = postService.getMonthlyStatystic();
+        return ResponseEntity.ok(monthlyStatystic);
+    }
+
+    @GetMapping("/analytics/yearly")
+    public  ResponseEntity<Map<Month, Integer>> getYearlyStatystic() {
+        Map<Month, Integer> yearlyStatystic = postService.getYearlyStatystic();
+        return ResponseEntity.ok(yearlyStatystic);
     }
 
     @ExceptionHandler(EntityNotFoundException.class)

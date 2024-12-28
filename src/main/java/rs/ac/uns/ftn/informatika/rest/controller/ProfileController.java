@@ -11,6 +11,7 @@ import rs.ac.uns.ftn.informatika.rest.dto.UserDto;
 import rs.ac.uns.ftn.informatika.rest.service.ProfileService;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @RestController
@@ -65,5 +66,20 @@ public class ProfileController {
     public ResponseEntity<List<Profile>> unfollowProfile(@PathVariable int unfollowId, @RequestParam Integer id) {
         List<Profile> followers = profileService.unfollowProfile(id, unfollowId);
         return ResponseEntity.ok(followers);
+    }
+    @GetMapping("/has-posts")
+    public ResponseEntity<Map<String, Long>> getProfilesWithPostsCount() {
+        Map<String, Long> profilesCount = profileService.getProfilesWithPostsCount();
+        return ResponseEntity.ok(profilesCount);
+    }
+    @GetMapping("/has-comments-only")
+    public ResponseEntity<Map<String, Long>> getProfilesWithCommentsOnlyCount() {
+        Map<String, Long> profilesCount = profileService.getProfilesWithCommentsOnlyCount();
+        return ResponseEntity.ok(profilesCount);
+    }
+    @GetMapping("/neither-posts-nor-comments")
+    public ResponseEntity<Map<String, Long>> getProfilesWithoutPostsNorCommentsCount() {
+        Map<String, Long> profilesCount = profileService.getProfilesWithoutPostsNorCommentsCount();
+        return ResponseEntity.ok(profilesCount);
     }
 }

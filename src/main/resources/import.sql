@@ -16,8 +16,8 @@ INSERT INTO USER_ROLE (user_id, role_id) VALUES (6, 2);
 
 
 INSERT INTO public.profile(user_id) VALUES ( 1);
-INSERT INTO public.profile(user_id) VALUES ( 2);
 INSERT INTO public.profile(user_id) VALUES ( 3);
+INSERT INTO public.profile(user_id) VALUES ( 5);
 
 INSERT INTO public.profile_following(profile_id, following_profile_id) VALUES (1, 2);
 INSERT INTO public.profile_following(profile_id, following_profile_id) VALUES (1, 3);
@@ -28,10 +28,10 @@ INSERT INTO public.posts(description, image, likes_count, publishing_date, publi
 
 INSERT INTO public.posts(id, description, image, likes_count, publishing_date, publishing_location_id, profile_id)VALUES (3, 'zeccc', 'bunny2.webp', 160, '11/10/2024', 1, 1);
 
-INSERT INTO public.posts(id, description, image, likes_count, publishing_date, publishing_location_id, profile_id)VALUES (2, 'mika', 'bunny.jpg', 255, '12/10/2024', 1, 2);
-INSERT INTO public.posts(id, description, image, likes_count, publishing_date, publishing_location_id, profile_id)VALUES ( 4,'zeka zec', 'bunny.jpg', 255, '12/12/2024', 1, 1);
-INSERT INTO public.posts(id, description, image, likes_count, publishing_date, publishing_location_id, profile_id)VALUES ( 5,'NOVI Zec', 'bunny.jpg', 255, '12/12/2024', 1, 2);
+INSERT INTO public.posts(id, description, image, likes_count, publishing_date, publishing_location_id, profile_id)VALUES (2, 'mika', 'bunny.jpg', 255, '12/25/2024', 1, 2);
+INSERT INTO public.posts(id, description, image, likes_count, publishing_date, publishing_location_id, profile_id)VALUES ( 4,'zeka zec', 'bunny.jpg', 255, '12/26/2024', 1, 1);
+INSERT INTO public.posts(id, description, image, likes_count, publishing_date, publishing_location_id, profile_id)VALUES ( 5,'NOVI Zec', 'bunny.jpg', 255, '12/24/2024', 1, 2);
 
-INSERT INTO public.comments(content, creation_date, creator_id, post_id)VALUES ('wow', '2024-11-15', 1, 1);
+INSERT INTO public.comments(content, creation_date, creator_id, post_id)VALUES ('wow', '2024-12-26', 1, 1);
 
 

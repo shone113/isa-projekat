@@ -18,9 +18,12 @@ import rs.ac.uns.ftn.informatika.rest.service.UserService;
 import rs.ac.uns.ftn.informatika.rest.util.TokenUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.DayOfWeek;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 @Tag(name = "Comment controller", description = "The comment API")
 @RestController
@@ -50,5 +53,21 @@ public class CommentController {
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
+    }
+
+    @GetMapping("/analytics/weekly")
+    public  ResponseEntity<Map<DayOfWeek, Integer>> getWeeklyStatystic() {
+        Map<DayOfWeek, Integer> weeklyStatystic = commentService.getWeeklyStatystic();
+        return ResponseEntity.ok(weeklyStatystic);
+    }
+    @GetMapping("/analytics/monthly")
+    public  ResponseEntity<Map<Integer, Integer>> getMonthlyStatystic() {
+        Map<Integer, Integer> monthlyStatystic = commentService.getMonthlyStatystic();
+        return ResponseEntity.ok(monthlyStatystic);
+    }
+    @GetMapping("/analytics/yearly")
+    public  ResponseEntity<Map<Month, Integer>> getYearlyStatystic() {
+        Map<Month, Integer> yearlyStatystic = commentService.getYearlyStatystic();
+        return ResponseEntity.ok(yearlyStatystic);
     }
 }

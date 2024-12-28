@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.informatika.rest.domain;
 
 import rs.ac.uns.ftn.informatika.rest.dto.CommentDTO;
+import rs.ac.uns.ftn.informatika.rest.service.ProfileService;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -20,7 +21,8 @@ public class Comment {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "creator_id")
-    private User creator;
+    private Profile creator;
+    //private User creator;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "post_id")
@@ -78,7 +80,8 @@ public class Comment {
 
     public Integer getCreatorId(){ return this.creator.getId();}
 
-    public void setCreator(User creator) {this.creator = creator;}
+    //public void setCreator(User creator) {this.creator = creator;}
+    public void setCreator(Profile creator) {this.creator = creator;}
 
     public void setPost(Post post) {this.post = post;}
 }
