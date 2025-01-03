@@ -95,6 +95,7 @@ public class WebSecurityConfig {
                 .antMatchers(HttpMethod.GET, "/api/profile/**").permitAll()
                 .antMatchers(HttpMethod.PUT, "/api/profile/**").hasRole("USER")
                 .antMatchers(HttpMethod.GET, "/api/comment//by-post-id/{id}").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/user/id").permitAll()// Dozvoli USER i ADMIN
                 .antMatchers("/h2-console/**").permitAll()	// /h2-console/** ako se koristi H2 baza)
                 .antMatchers("/api/foo").permitAll()		// /api/foo
                 .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/v3/api-docs/**", "/webjars/**").permitAll()
