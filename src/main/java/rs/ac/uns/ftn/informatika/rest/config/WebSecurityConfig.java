@@ -95,6 +95,7 @@ public class WebSecurityConfig {
                 .antMatchers(HttpMethod.GET, "/api/profile/**").permitAll()
                 .antMatchers(HttpMethod.PUT, "/api/profile/**").hasRole("USER")
                 .antMatchers(HttpMethod.GET, "/api/comment//by-post-id/{id}").permitAll()
+                .antMatchers("/socket/**", "/socket-endpoint/**", "/webjars/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/user/id").permitAll()// Dozvoli USER i ADMIN
                 .antMatchers("/h2-console/**").permitAll()	// /h2-console/** ako se koristi H2 baza)
                 .antMatchers("/api/foo").permitAll()		// /api/foo
@@ -107,7 +108,7 @@ public class WebSecurityConfig {
                 // za svaki drugi zahtev korisnik mora biti autentifikovan
                 .anyRequest().authenticated().and()
                 // za development svrhe ukljuci konfiguraciju za CORS iz WebConfig klase
-                .cors().and()
+                .cors().and().csrf().and()
                 .formLogin().loginPage("/login").permitAll().and()
                 // umetni custom filter TokenAuthenticationFilter kako bi se vrsila provera JWT tokena umesto cistih korisnickog imena i lozinke (koje radi BasicAuthenticationFilter)
                 .addFilterBefore(new TokenAuthenticationFilter(tokenUtils,  userDetailsService()), BasicAuthenticationFilter.class);
