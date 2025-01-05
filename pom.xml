@@ -97,7 +97,12 @@
 			<artifactId>resilience4j-spring-boot2</artifactId>
 			<version>1.5.0</version>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
 	<build>
 		<plugins>
