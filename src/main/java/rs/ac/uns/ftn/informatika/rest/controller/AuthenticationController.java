@@ -79,6 +79,9 @@ public class AuthenticationController {
         }
 
         User user = this.userService.register(new User(userDto));
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         Profile profile = profileService.create(user);
         String jwt = tokenUtils.generateToken(user);
         userService.setActivationToken(user, jwt);
