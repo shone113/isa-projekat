@@ -96,6 +96,10 @@ public class WebSecurityConfig {
                 .antMatchers(HttpMethod.PUT, "/api/profile/**").hasRole("USER")
                 .antMatchers(HttpMethod.GET, "/api/comment//by-post-id/{id}").permitAll()
                 .antMatchers("/socket/**", "/socket-endpoint/**", "/webjars/**").permitAll()
+                //.antMatchers("/api/user/{id}").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/api/user/**").permitAll()
+                .antMatchers("/user/").permitAll()
+                .antMatchers("/api/chat/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/user/id").permitAll()// Dozvoli USER i ADMIN
                 .antMatchers("/h2-console/**").permitAll()	// /h2-console/** ako se koristi H2 baza)
                 .antMatchers("/api/foo").permitAll()		// /api/foo

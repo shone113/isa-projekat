@@ -43,7 +43,8 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDto> getById(@RequestParam int id) {
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    public ResponseEntity<UserDto> getById(@PathVariable int id) {
         User user = userService.findById(id);
         return ResponseEntity.ok(new UserDto(user));
     }
