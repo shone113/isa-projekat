@@ -17,7 +17,9 @@ INSERT INTO USER_ROLE (user_id, role_id) VALUES (6, 2);
 
 INSERT INTO public.profile(user_id) VALUES ( 1);
 INSERT INTO public.profile(user_id) VALUES ( 3);
+INSERT INTO public.profile(user_id) VALUES ( 4);
 INSERT INTO public.profile(user_id) VALUES ( 5);
+INSERT INTO public.profile(user_id) VALUES ( 6);
 
 INSERT INTO public.profile_following(profile_id, following_profile_id) VALUES (1, 2);
 INSERT INTO public.profile_following(profile_id, following_profile_id) VALUES (1, 3);
@@ -34,4 +36,17 @@ INSERT INTO public.posts(id, description, image, likes_count, publishing_date, p
 
 INSERT INTO public.comments(content, creation_date, creator_id, post_id)VALUES ('wow', '2024-12-26', 1, 1);
 
+INSERT INTO public.chats(id, chat_type, title, admin_profile_id) VALUES (1, 'GROUP', 'fudbal', 1);
+INSERT INTO public.chats(id, chat_type, title, admin_profile_id) VALUES (2, 'GROUP', 'dispomanija', 1);
+SELECT setval('chats_id_seq', (SELECT MAX(id) FROM chats));
 
+INSERT INTO public.chat_members(chat_id, profile_id) VALUES (1, 1);
+INSERT INTO public.chat_members(chat_id, profile_id) VALUES (1, 2);
+INSERT INTO public.chat_members(chat_id, profile_id) VALUES (2, 1);
+INSERT INTO public.chat_members(chat_id, profile_id) VALUES (2, 2);
+INSERT INTO public.chat_members(chat_id, profile_id) VALUES (2, 3);
+
+INSERT INTO public.messages(id, content, creation_date, chat_id, creator_id) VALUES (1, 'hej ti', '2024-12-26', 1, 1);
+INSERT INTO public.messages(id, content, creation_date, chat_id, creator_id) VALUES (2, 'oo', '2024-12-26', 1, 1);
+INSERT INTO public.messages(id, content, creation_date, chat_id, creator_id) VALUES (3, 'djesi', '2024-12-26', 2, 1);
+SELECT setval('messages_id_seq', (SELECT MAX(id) FROM messages));

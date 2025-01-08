@@ -1,7 +1,10 @@
 package rs.ac.uns.ftn.informatika.rest.domain;
 
+import rs.ac.uns.ftn.informatika.rest.dto.MessageDTO;
+
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "messages")
@@ -14,17 +17,11 @@ public class Message {
     private String content;
 
     @Column(name = "creation_date", nullable = false)
-    private LocalDate creationDate;
+    private LocalDateTime creationDate;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "creator_id")
     private Profile creator;
-
-    @Column(name = "creator_name", nullable = false)
-    private String creatorName;
-
-    @Column(name = "creator_surname", nullable = false)
-    private String creatorSurname;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "chat_id")
@@ -32,12 +29,15 @@ public class Message {
 
     public Message() {}
 
-    public Message(String content, LocalDate creationDate, Profile creator, String creatorName, String creatorSurname) {
+    public Message(String content, LocalDateTime creationDate, Profile creator, String creatorName, String creatorSurname, Chat chat) {
         this.content = content;
         this.creationDate = creationDate;
         this.creator = creator;
-        this.creatorName = creatorName;
-        this.creatorSurname = creatorSurname;
+        this.chat = chat;
+    }
+    public Message(MessageDTO messageDTO){
+        this.content = messageDTO.getContent();
+        this.creationDate = messageDTO.getCreationTime();
     }
     public Integer getId() {
         return id;
@@ -55,11 +55,11 @@ public class Message {
         this.content = content;
     }
 
-    public LocalDate getCreationDate() {
+    public LocalDateTime getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(LocalDate creationDate) {
+    public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
     }
 
@@ -69,22 +69,6 @@ public class Message {
 
     public void setCreator(Profile creator) {
         this.creator = creator;
-    }
-
-    public String getCreatorName() {
-        return creatorName;
-    }
-
-    public void setCreatorName(String creatorName) {
-        this.creatorName = creatorName;
-    }
-
-    public String getCreatorSurname() {
-        return creatorSurname;
-    }
-
-    public void setCreatorSurname(String creatorSurname) {
-        this.creatorSurname = creatorSurname;
     }
 
     public Chat getChat() {

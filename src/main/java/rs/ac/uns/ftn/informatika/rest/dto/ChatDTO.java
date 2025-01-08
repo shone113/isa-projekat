@@ -10,6 +10,7 @@ public class ChatDTO {
     private String title;
     private List<Profile> members;
     private Integer adminProfileId;
+    private Chat.ChatType chatType;
 
     public ChatDTO(){}
 
@@ -18,12 +19,14 @@ public class ChatDTO {
         this.title = chat.getTitle();
         this.members = chat.getMembers();
         this.adminProfileId = chat.getAdminProfile().getId();
+        this.chatType = chat.getChatType();
     }
-    public ChatDTO(Integer id, String title, List<Profile> members, Integer adminProfileId) {
+    public ChatDTO(Integer id, String title, List<Profile> members, Integer adminProfileId, Chat.ChatType chatType) {
         this.id = id;
         this.title = title;
         this.members = members;
         this.adminProfileId = adminProfileId;
+        this.chatType = chatType;
     }
 
     public Integer getId() {
@@ -53,4 +56,6 @@ public class ChatDTO {
     public Integer getAdminProfileId() { return adminProfileId; }
     public void setAdminProfileId(Integer adminProfileId) { this.adminProfileId = adminProfileId; }
 
+    public Chat.ChatType getChatType() { return chatType;}
+    public void setChatType(Chat.ChatType chatType) { this.chatType = chatType; }
 }

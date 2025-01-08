@@ -5,13 +5,16 @@ import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.informatika.rest.domain.Chat;
 import rs.ac.uns.ftn.informatika.rest.domain.Post;
 import rs.ac.uns.ftn.informatika.rest.domain.Profile;
+import rs.ac.uns.ftn.informatika.rest.domain.User;
 import rs.ac.uns.ftn.informatika.rest.dto.ChatDTO;
 import rs.ac.uns.ftn.informatika.rest.dto.PostDTO;
 import rs.ac.uns.ftn.informatika.rest.repository.IChatRepository;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class ChatService {
@@ -31,7 +34,7 @@ public class ChatService {
         for (Profile profile : chat.getMembers()) {
             profile.setPosts(null);
         }
-        return new ChatDTO(chat.getId(), chat.getTitle(), chat.getMembers(), chat.getAdminProfile().getId());
+        return new ChatDTO(chat.getId(), chat.getTitle(), chat.getMembers(), chat.getAdminProfile().getId(), chat.getChatType());
     }
 
     @Transactional
@@ -45,7 +48,7 @@ public class ChatService {
             }
             ChatDTO chatDTO = new ChatDTO(chat);
             chatDTOs.add(chatDTO);
-            System.out.println("Chat: " + chat.getTitle() + " " + chat.getId() + " " + chat.getMembers().size());
+            System.out.println("Chat: " + chat.getTitle() + " " + chat.getId() + " " + chat.getChatType().equals(Chat.ChatType.GROUP));
         }
         return chatDTOs;
     }
@@ -77,16 +80,47 @@ public class ChatService {
     }
 
     @Transactional
+    public ChatDTO getOrCreateDm(Integer firstProfileId, Integer secondProfileId){
+        List<Chat> chats = chatRepository.findAll();
+
+        for (Chat chat : chats) {
+            Set<Integer> profileIds = new HashSet<>();
+            // Pretpostavljamo da chat ima korisnike sa ID-evima
+            for (Profile profile : chat.getMembers()) {
+                profileIds.add(profile.getId());
+                profile.setPosts(null);
+            }
+
+            // Proveravamo da li oba korisnika postoje u chat-u
+            if (profileIds.contains(firstProfileId) && profileIds.contains(secondProfileId) && chat.getChatType().equals(Chat.ChatType.DM)) {
+                return new ChatDTO(chat);
+            }
+        }
+        Chat newChat = new Chat();
+        newChat.setChatType(Chat.ChatType.DM);
+        Profile firstProfile = profileService.getProfileById(firstProfileId);
+        Profile secondProfile = profileService.getProfileById(secondProfileId);
+        firstProfile.setPosts(null);
+        secondProfile.setPosts(null);
+
+        newChat.setAdminProfile(firstProfile);
+        newChat.setMembers(List.of(firstProfile, secondProfile)); // Postavljamo oba korisnika u novi chat
+        chatRepository.save(newChat); // Snimamo novi chat u bazu
+
+        return new ChatDTO(newChat);
+    }
+
+    @Transactional
     public ChatDTO create(ChatDTO chatDTO){
         Profile adminProfile = profileService.getProfileById(chatDTO.getAdminProfileId());
-        Chat chat = new Chat(chatDTO.getTitle(), chatDTO.getMembers(), adminProfile);
+        Chat chat = new Chat(chatDTO.getTitle(), chatDTO.getMembers(), adminProfile, chatDTO.getChatType());
         chatRepository.save(chat);
         List<Profile> profiles = new ArrayList<>();
         for(Profile profile : chatDTO.getMembers()) {
             profiles.add(profileService.getProfileById(profile.getId()));
             profile.setPosts(null);
         }
-        return new ChatDTO(chat.getId(), chat.getTitle(), profiles, adminProfile.getId());
+        return new ChatDTO(chat.getId(), chat.getTitle(), profiles, adminProfile.getId(), chat.getChatType());
     }
 
     @Transactional
@@ -97,7 +131,7 @@ public class ChatService {
             member.setPosts(null); // Postavljamo posts na null
         }
         chatRepository.save(chat);
-        return new ChatDTO(chatId, chat.getTitle(), chat.getMembers(), chat.getAdminProfile().getId());
+        return new ChatDTO(chatId, chat.getTitle(), chat.getMembers(), chat.getAdminProfile().getId(), chat.getChatType());
     }
 
     @Transactional
@@ -108,6 +142,6 @@ public class ChatService {
             member.setPosts(null); // Postavljamo posts na null
         }
         chatRepository.save(chat);
-        return new ChatDTO(chatId, chat.getTitle(), chat.getMembers(), chat.getAdminProfile().getId());
+        return new ChatDTO(chatId, chat.getTitle(), chat.getMembers(), chat.getAdminProfile().getId(), chat.getChatType());
     }
 }

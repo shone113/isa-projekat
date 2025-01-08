@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.informatika.rest.domain.User;
 import rs.ac.uns.ftn.informatika.rest.dto.ChatDTO;
 import rs.ac.uns.ftn.informatika.rest.dto.CommentDTO;
+import rs.ac.uns.ftn.informatika.rest.dto.MessageDTO;
 import rs.ac.uns.ftn.informatika.rest.dto.PostDTO;
 import rs.ac.uns.ftn.informatika.rest.service.ChatService;
 
@@ -41,6 +42,12 @@ public class ChatController {
     @GetMapping("/{id}")
     public ResponseEntity<ChatDTO> getChatById(@PathVariable int id) {
          ChatDTO chatDTO = chatService.findById(id);
+        return ResponseEntity.ok(chatDTO);
+    }
+
+    @GetMapping("/{firstProfileId}/{secondProfileId}")
+    public ResponseEntity<ChatDTO> getDmChat(@PathVariable Integer firstProfileId, @PathVariable Integer secondProfileId) {
+        ChatDTO chatDTO = chatService.getOrCreateDm(firstProfileId, secondProfileId);
         return ResponseEntity.ok(chatDTO);
     }
 

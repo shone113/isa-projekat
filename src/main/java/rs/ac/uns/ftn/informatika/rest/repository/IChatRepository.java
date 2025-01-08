@@ -13,4 +13,5 @@ public interface IChatRepository extends JpaRepository<Chat, Integer> {
     @Query("SELECT c FROM Chat c")
     List<Chat> findAll();
 
+
 }
