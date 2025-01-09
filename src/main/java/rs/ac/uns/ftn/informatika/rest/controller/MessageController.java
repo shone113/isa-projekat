@@ -35,6 +35,12 @@ public class MessageController {
         return ResponseEntity.ok(messages);
     }
 
+    @GetMapping("/{chatId}/{profileId}")
+    public ResponseEntity<List<MessageDTO>> getAllForChat(@PathVariable Integer chatId, @PathVariable Integer profileId) {
+        List<MessageDTO> messages = messageService.getAllForUserProfile(chatId, profileId);
+        return ResponseEntity.ok(messages);
+    }
+
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MessageDTO> createMessage(@RequestBody MessageDTO messageDTO) {
         try{

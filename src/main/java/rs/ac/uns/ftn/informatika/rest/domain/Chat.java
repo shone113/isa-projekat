@@ -4,6 +4,7 @@ import rs.ac.uns.ftn.informatika.rest.dto.ChatDTO;
 
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -31,27 +32,40 @@ public class Chat {
     @JoinColumn(name = "admin_profile_id")
     private Profile adminProfile;
 
-    @ManyToMany()
-    @JoinTable(
-            name = "chat_members",
-            joinColumns = @JoinColumn(name = "chat_id"),
-            inverseJoinColumns = @JoinColumn(name = "profile_id")
-    )
-    private List<Profile> members;
+//    @ManyToMany()
+//    @JoinTable(
+//            name = "chat_members",
+//            joinColumns = @JoinColumn(name = "chat_id"),
+//            inverseJoinColumns = @JoinColumn(name = "profile_id")
+//    )
+//    private List<Profile> members;
+
+    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ChatMember> members;
+
 
     public Chat() {}
 
     public Chat(String title, List<Profile> members, Profile adminProfile, ChatType chatType) {
         this.title = title;
-        this.members = members;
+//        this.members = members;
         this.adminProfile = adminProfile;
         this.chatType = chatType;
+        this.members = new ArrayList<>();
+
+        for (Profile profile : members) {
+            this.members.add(new ChatMember(this, profile));
+        }
     }
     public Chat(ChatDTO chatDTO) {
         this.id = chatDTO.getId();
         this.title = chatDTO.getTitle();
-        this.members = chatDTO.getMembers();
+//        this.members = chatDTO.getMembers();
         this.chatType = chatDTO.getChatType();
+        this.members = new ArrayList<>();
+        for (Profile profile : chatDTO.getMembers()) {
+            this.members.add(new ChatMember(this, profile));
+        }
     }
     public Integer getId() {
         return id;
@@ -69,13 +83,25 @@ public class Chat {
         this.title = title;
     }
 
-    public List<Profile> getMembers() {
+//    public List<Profile> getMembers() {
+//        return members;
+//    }
+//
+//    public void setMembers(List<Profile> members) { this.members = members; }
+
+    public List<Profile> getMemberProfiles() {
+        List<Profile> profiles = new ArrayList<>();
+        for (ChatMember member : members) {
+            profiles.add(member.getProfile()); // Uzmi Profile iz ChatMember
+        }
+        return profiles;
+    }
+
+    public List<ChatMember> getMembers() {
         return members;
     }
 
-    public void setMembers(List<Profile> members) {
-        this.members = members;
-    }
+    public void setMembers(List<ChatMember> members) { this.members = members; }
 
     public Profile getAdminProfile() { return adminProfile; }
 

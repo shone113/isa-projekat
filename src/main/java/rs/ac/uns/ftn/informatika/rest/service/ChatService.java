@@ -2,10 +2,7 @@ package rs.ac.uns.ftn.informatika.rest.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rs.ac.uns.ftn.informatika.rest.domain.Chat;
-import rs.ac.uns.ftn.informatika.rest.domain.Post;
-import rs.ac.uns.ftn.informatika.rest.domain.Profile;
-import rs.ac.uns.ftn.informatika.rest.domain.User;
+import rs.ac.uns.ftn.informatika.rest.domain.*;
 import rs.ac.uns.ftn.informatika.rest.dto.ChatDTO;
 import rs.ac.uns.ftn.informatika.rest.dto.PostDTO;
 import rs.ac.uns.ftn.informatika.rest.repository.IChatRepository;
@@ -24,6 +21,8 @@ public class ChatService {
 
     @Autowired
     private ProfileService profileService;
+    @Autowired
+    private ChatMemberService chatMemberService;
 
     public ChatService(){}
 
@@ -31,10 +30,10 @@ public class ChatService {
     public ChatDTO findById(Integer id){
         Chat chat = chatRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Chat not found with ID: " + id));
-        for (Profile profile : chat.getMembers()) {
+        for (Profile profile : chat.getMemberProfiles()) {
             profile.setPosts(null);
         }
-        return new ChatDTO(chat.getId(), chat.getTitle(), chat.getMembers(), chat.getAdminProfile().getId(), chat.getChatType());
+        return new ChatDTO(chat.getId(), chat.getTitle(), chat.getMemberProfiles(), chat.getAdminProfile().getId(), chat.getChatType());
     }
 
     @Transactional
@@ -43,7 +42,7 @@ public class ChatService {
         System.out.println("Broj pronađenih chatova: " + chats.size());
         List<ChatDTO> chatDTOs = new ArrayList<>();
         for(Chat chat : chats) {
-            for (Profile profile : chat.getMembers()) {
+            for (Profile profile : chat.getMemberProfiles()) {
                 profile.setPosts(null);
             }
             ChatDTO chatDTO = new ChatDTO(chat);
@@ -63,9 +62,9 @@ public class ChatService {
         // Filtriramo chatove u kojima je trenutni korisnik član
         for (Chat chat : chats) {
             // Prolazimo kroz članove chata da bismo našli trenutnog korisnika
-            if (chat.getMembers().stream().anyMatch(profile -> profile.getId().equals(profileId))) {
+            if (chat.getMemberProfiles().stream().anyMatch(profile -> profile.getId().equals(profileId))) {
                 // Ako je trenutni korisnik član, postavljamo posts na null
-                for (Profile profile : chat.getMembers()) {
+                for (Profile profile : chat.getMemberProfiles()) {
                     profile.setPosts(null);
                 }
 
@@ -86,7 +85,7 @@ public class ChatService {
         for (Chat chat : chats) {
             Set<Integer> profileIds = new HashSet<>();
             // Pretpostavljamo da chat ima korisnike sa ID-evima
-            for (Profile profile : chat.getMembers()) {
+            for (Profile profile : chat.getMemberProfiles()) {
                 profileIds.add(profile.getId());
                 profile.setPosts(null);
             }
@@ -104,9 +103,10 @@ public class ChatService {
         secondProfile.setPosts(null);
 
         newChat.setAdminProfile(firstProfile);
-        newChat.setMembers(List.of(firstProfile, secondProfile)); // Postavljamo oba korisnika u novi chat
+//        newChat.setMembers(List.of(firstProfile, secondProfile)); // Postavljamo oba korisnika u novi chat
         chatRepository.save(newChat); // Snimamo novi chat u bazu
-
+        chatMemberService.save(new ChatMember(newChat, firstProfile));
+        chatMemberService.save(new ChatMember(newChat, secondProfile));
         return new ChatDTO(newChat);
     }
 
@@ -126,22 +126,25 @@ public class ChatService {
     @Transactional
     public ChatDTO addMember(Integer chatId, Integer profileId){
         Chat chat = chatRepository.getById(chatId);
-        chat.getMembers().add(profileService.getProfileById(profileId));
-        for (Profile member : chat.getMembers()) {
+//        chat.getMembers().add(new ChatMember(chat, profileService.getProfileById(profileId)));
+        Integer chatMessagesCount = chatRepository.countMessagesForChat(chatId);
+        chatMemberService.save(new ChatMember(chat, profileService.getProfileById(profileId), chatMessagesCount));
+        for (Profile member : chat.getMemberProfiles()) {
             member.setPosts(null); // Postavljamo posts na null
         }
         chatRepository.save(chat);
-        return new ChatDTO(chatId, chat.getTitle(), chat.getMembers(), chat.getAdminProfile().getId(), chat.getChatType());
+        return new ChatDTO(chatId, chat.getTitle(), chat.getMemberProfiles(), chat.getAdminProfile().getId(), chat.getChatType());
     }
 
     @Transactional
     public ChatDTO removeMember(Integer chatId, Integer profileId){
         Chat chat = chatRepository.getById(chatId);
-        chat.getMembers().remove(profileService.getProfileById(profileId));
-        for (Profile member : chat.getMembers()) {
+//        chat.getMembers().remove(profileService.getProfileById(profileId));
+        chatMemberService.remove(new ChatMember(chat, profileService.getProfileById(profileId)));
+        for (Profile member : chat.getMemberProfiles()) {
             member.setPosts(null); // Postavljamo posts na null
         }
         chatRepository.save(chat);
-        return new ChatDTO(chatId, chat.getTitle(), chat.getMembers(), chat.getAdminProfile().getId(), chat.getChatType());
+        return new ChatDTO(chatId, chat.getTitle(), chat.getMemberProfiles(), chat.getAdminProfile().getId(), chat.getChatType());
     }
 }

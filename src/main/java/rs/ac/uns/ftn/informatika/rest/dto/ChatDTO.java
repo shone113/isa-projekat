@@ -1,8 +1,10 @@
 package rs.ac.uns.ftn.informatika.rest.dto;
 
 import rs.ac.uns.ftn.informatika.rest.domain.Chat;
+import rs.ac.uns.ftn.informatika.rest.domain.ChatMember;
 import rs.ac.uns.ftn.informatika.rest.domain.Profile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ChatDTO {
@@ -17,9 +19,13 @@ public class ChatDTO {
     public ChatDTO(Chat chat) {
         this.id = chat.getId();
         this.title = chat.getTitle();
-        this.members = chat.getMembers();
+//        this.members = chat.getMembers();
         this.adminProfileId = chat.getAdminProfile().getId();
         this.chatType = chat.getChatType();
+        this.members = new ArrayList<>();
+        for (ChatMember member : chat.getMembers()) {
+            this.members.add(member.getProfile()); // Uzmi Profile iz ChatMember
+        }
     }
     public ChatDTO(Integer id, String title, List<Profile> members, Integer adminProfileId, Chat.ChatType chatType) {
         this.id = id;
