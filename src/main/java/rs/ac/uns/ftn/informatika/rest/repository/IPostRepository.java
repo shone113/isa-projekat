@@ -8,6 +8,9 @@ import org.springframework.data.repository.query.Param;
 import rs.ac.uns.ftn.informatika.rest.domain.Comment;
 import rs.ac.uns.ftn.informatika.rest.domain.Post;
 import org.springframework.data.domain.Pageable;
+import rs.ac.uns.ftn.informatika.rest.dto.ImageDTO;
+import rs.ac.uns.ftn.informatika.rest.dto.PostDTO;
+
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
@@ -29,8 +32,20 @@ public interface IPostRepository extends JpaRepository<Post, Integer> {
 
     @Query(value = "SELECT COUNT(*) > 0 FROM post_likes WHERE post_id = :postId AND profile_id = :profileId", nativeQuery = true)
     boolean doesUserProfileLikedPost(@Param("profileId") Integer profileId, @Param("postId") Integer postId);
+
     @Query("SELECT p FROM Post p ORDER BY p.publishingDate DESC")
     List<Post> findAllPostsOrderByCreatedAtDesc();
+
+    @Query("SELECT new rs.ac.uns.ftn.informatika.rest.dto.PostDTO(p) FROM Post p ORDER BY p.publishingDate DESC")
+    List<PostDTO> findAllPostsWithoutImagesDesc();
+
+    //    @Query("SELECT p.id, p.publishingDate, p.profile.id, p.description, p.likesCount, p.publishingLocationId FROM Post p ORDER BY p.publishingDate DESC")
+//    List<PostDTO> findPostsWithoutImagesDesc();
+    @Query("SELECT new rs.ac.uns.ftn.informatika.rest.dto.PostDTO(p) FROM Post p ORDER BY p.publishingDate DESC")
+    List<PostDTO> findPostsWithoutImagesDesc();
+
+    @Query("SELECT new rs.ac.uns.ftn.informatika.rest.dto.PostDTO(p) FROM Post p WHERE p.id = :postId")
+    PostDTO findOnePostWithoutImage(@Param("postId") Integer postId);
 
     @Query("SELECT count(p) FROM Post  p")
     int countAllPosts();
@@ -50,4 +65,9 @@ public interface IPostRepository extends JpaRepository<Post, Integer> {
     @Query("SELECT p FROM Post p WHERE p.publishingDate BETWEEN :startDate AND :endDate")
     List<Post> findPostsFromDateRange(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 
+    @Query("SELECT new rs.ac.uns.ftn.informatika.rest.dto.ImageDTO(p.id, p.image, p.profile.id) FROM Post p ORDER BY p.publishingDate DESC")
+    List<ImageDTO> findAllImages();
+
+    @Query("SELECT new rs.ac.uns.ftn.informatika.rest.dto.ImageDTO(p.id, p.image, p.profile.id) FROM Post p WHERE p.id = :postId")
+    ImageDTO findSingleImage(@Param("postId") Integer postId);
 }

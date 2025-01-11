@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.informatika.rest.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -8,6 +9,7 @@ import rs.ac.uns.ftn.informatika.rest.domain.Comment;
 import rs.ac.uns.ftn.informatika.rest.domain.Post;
 import rs.ac.uns.ftn.informatika.rest.domain.Profile;
 import rs.ac.uns.ftn.informatika.rest.domain.User;
+import rs.ac.uns.ftn.informatika.rest.dto.ImageDTO;
 import rs.ac.uns.ftn.informatika.rest.dto.PostDTO;
 import rs.ac.uns.ftn.informatika.rest.repository.IPostRepository;
 
@@ -27,21 +29,40 @@ public class PostService implements IPostService {
     private UserService userService;
     @Autowired
     private ProfileService profileService;
+    @Autowired
+    private ImageService imageService;
 
     @Override
-    public Collection<Post> findAll() {
-        Collection<Post> posts = postRepository.findAllPostsOrderByCreatedAtDesc();
-        return posts;
+    public List<PostDTO> findAll() {
+//        Collection<Post> posts = postRepository.findAllPostsOrderByCreatedAtDesc();
+//        return posts;
+
+        List<PostDTO> postDTOs = postRepository.findAllPostsWithoutImagesDesc();
+        Map<Integer, String> cachedPhotos = imageService.findAllPhotos();
+        List<PostDTO> filteredPostDTOs = new ArrayList<>();
+
+        for(PostDTO postDTO : postDTOs){
+            String postImage = cachedPhotos.get(postDTO.getId()); // Dohvatiti sliku sa keša
+            postDTO.setImage(postImage); // Pretpostavljam da postoji setter za sliku u PostDTO
+            filteredPostDTOs.add(postDTO);
+        }
+        return filteredPostDTOs;
     }
 
     public List<PostDTO> findAllForLoggedUser(Integer userId) {
-        List<Post> posts = postRepository.findAllPostsOrderByCreatedAtDesc();
+//        List<Post> posts = postRepository.findAllPostsOrderByCreatedAtDesc();
+        List<PostDTO> postDTOs = postRepository.findAllPostsWithoutImagesDesc();
         User user = userService.findById(userId);
         List<PostDTO> filteredPostDTOs = new ArrayList<>();
-        for(Post post : posts) {
-            PostDTO postDTO = new PostDTO(post);
+
+        Map<Integer, String> cachedPhotos = imageService.findAllPhotos();
+
+        for(PostDTO postDTO : postDTOs) {
+            String postImage = cachedPhotos.get(postDTO.getId()); // Dohvatiti sliku sa keša
+            postDTO.setImage(postImage); // Pretpostavljam da postoji setter za sliku u PostDTO
+
             Profile profile = profileService.getProfileByUserId(userId);
-            postDTO.setLiked(postRepository.doesUserProfileLikedPost(profile.getId(), post.getId()));
+            postDTO.setLiked(postRepository.doesUserProfileLikedPost(profile.getId(), postDTO.getId()));
             postDTO.setCreatorName(user.getName());
             postDTO.setCreatorSurname(user.getSurname());
             filteredPostDTOs.add(postDTO);
@@ -51,21 +72,30 @@ public class PostService implements IPostService {
     }
 
     @Override
-    public Post findOne(Integer id) {
-        Post post = postRepository.getOne(id);
-        return post;
+    public PostDTO findOne(Integer id) {
+//        Post post = postRepository.getOne(id);
+//        return post;
+        PostDTO postDTO = postRepository.findOnePostWithoutImage(id);
+        String image = imageService.findPhotoForPost(id);
+        postDTO.setImage(image);
+        return postDTO;
     }
 
     @Transactional
     public List<PostDTO> findPostsForUser(Integer userId) {
-        List<Post> posts = postRepository.findAllPostsOrderByCreatedAtDesc();
+        List<PostDTO> postDTOSs = postRepository.findPostsWithoutImagesDesc();
         User user = userService.findById(userId);
         List<PostDTO> filteredPostDTOs = new ArrayList<>();
-        for(Post post : posts) {
-            if(profileService.doesFollowPublisher(userId, post.getCreatorProfileId())){
-                PostDTO postDTO = new PostDTO(post);
+
+        Map<Integer, String> cachedPhotos = imageService.findPhotosForUser(userId);
+
+        for(PostDTO postDTO : postDTOSs) {
+            if(profileService.doesFollowPublisher(userId, postDTO.getCreatorProfileId())){
+                String postImage = cachedPhotos.get(postDTO.getId()); // Dohvatiti sliku sa keša
+                postDTO.setImage(postImage); // Pretpostavljam da postoji setter za sliku u PostDTO
+
                 Profile profile = profileService.getProfileByUserId(userId);
-                postDTO.setLiked(postRepository.doesUserProfileLikedPost(profile.getId(), post.getId()));
+                postDTO.setLiked(postRepository.doesUserProfileLikedPost(profile.getId(), postDTO.getId()));
                 postDTO.setCreatorName(user.getName());
                 postDTO.setCreatorSurname(user.getSurname());
                 filteredPostDTOs.add(postDTO);
@@ -115,7 +145,7 @@ public class PostService implements IPostService {
 
     @Transactional
     public Post update(PostDTO post, Integer postId, Integer userId) throws Exception {
-        Post postToUpdate = findOne(postId);
+        Post postToUpdate = new Post(findOne(postId));
         if (postToUpdate == null) {
             throw new Exception("Trazeni entitet nije pronadjen.");
         }
