@@ -40,6 +40,10 @@ public class ProfileService {
         profile.setUser(managedUser);
         return profileRepository.save(profile);
     }
+    @Transactional
+    public void delete(Profile profile) {
+        profileRepository.delete(profile);
+    }
 
     @Transactional
     public boolean doesFollowPublisher(Integer userId, Integer creatorProfileId) {
