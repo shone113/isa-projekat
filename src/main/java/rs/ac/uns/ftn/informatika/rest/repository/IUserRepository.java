@@ -2,12 +2,14 @@ package rs.ac.uns.ftn.informatika.rest.repository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import rs.ac.uns.ftn.informatika.rest.domain.Greeting;
 import rs.ac.uns.ftn.informatika.rest.domain.User;
 
+import javax.persistence.LockModeType;
+import javax.persistence.QueryHint;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -90,4 +92,37 @@ public interface IUserRepository  extends JpaRepository<User, Integer> {
     public List<User> getAllUsers(Pageable pageable);
 
     public int countUsersByEmail(String email);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Transactional
+    @QueryHints({
+            @QueryHint(name = "javax.persistence.lock.timeout", value = "0") // Ne čekaj na zaključavanje
+    })
+    @Query("SELECT u FROM User u WHERE u.id = :userId")
+    User findUserByID(@Param("userId") Integer userId);
+
+    //    @Lock(LockModeType.PESSIMISTIC_WRITE)
+@Transactional
+    @Modifying
+    @Query("UPDATE User u SET u.followingCount = u.followingCount + 1 WHERE u.id = :userId")
+    void incrementFollowingCount(@Param("userId") Integer userId);
+
+//    @Lock(LockModeType.PESSIMISTIC_WRITE)
+@Transactional
+    @Modifying
+    @Query("UPDATE User u SET u.followingCount = u.followingCount - 1 WHERE u.id = :userId")
+    void decrementFollowingCount(@Param("userId") Integer userId);
+
+//    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Transactional
+    @Modifying
+    @Query("UPDATE User u SET u.followersCount = u.followersCount + 1 WHERE u.id = :userId")
+    void incrementFollowersCount(@Param("userId") Integer userId);
+
+//    @Lock(LockModeType.PESSIMISTIC_WRITE)
+@Transactional
+    @Modifying
+    @Query("UPDATE User u SET u.followersCount = u.followersCount - 1 WHERE u.id = :userId")
+    void decrementFollowersCount(@Param("userId") Integer userId);
+
 }
