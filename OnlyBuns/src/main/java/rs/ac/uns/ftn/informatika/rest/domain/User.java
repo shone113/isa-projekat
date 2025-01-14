@@ -48,6 +48,11 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private List<Role> roles;
 
+    @Column(name = "longitude")
+    private double longitude;
+    @Column(name = "latitude")
+    private double latitude;
+
     public User() {
     }
 
@@ -60,6 +65,8 @@ public class User implements UserDetails {
         followersCount = userDto.getFollowers();
         followingCount = userDto.getFollowingCount();
         postsCount = userDto.getPostsCount();
+        latitude = userDto.getLatitude();
+        longitude = userDto.getLongitude();
     }
     public User(Integer id, String name, String surname, String email, String password, int followersCount, int followingCount, int postsCount) {
         super();
@@ -174,5 +181,21 @@ public class User implements UserDetails {
 
     public void setActivationToken(String activationToken) {
         this.activationToken = activationToken;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
     }
 }

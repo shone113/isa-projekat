@@ -19,6 +19,9 @@ public class UserDto {
 
     private int postsCount;
 
+    private double latitude;
+
+    private double longitude;
     public UserDto() {
     }
 
@@ -31,6 +34,8 @@ public class UserDto {
         this.followersCount = user.getFollowersCount();
         this.followingCount = user.getFollowingCount();
         this.postsCount = user.getPostsCount();
+        this.latitude = user.getLatitude();
+        this.longitude = user.getLongitude();
     }
     public UserDto(Integer id, String name, String surname, String email, String password, int followersCount, int followingCount, int postsCount) {
         super();
@@ -96,4 +101,19 @@ public class UserDto {
 
     public void setPostsCount(int postsCount) {this.postsCount = postsCount;}
 
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
 }

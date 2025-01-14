@@ -19,6 +19,8 @@ public class PostDTO {
     private boolean liked;
     private String creatorName;
     private String creatorSurname;
+    private double longitude;
+    private double latitude;
 
     public PostDTO() {}
 
@@ -46,6 +48,8 @@ public class PostDTO {
         this.creatorProfileId = post.getCreatorProfileId() != null ? post.getCreatorProfileId() : null;
         this.creatorName = "";
         this.creatorSurname = "";
+        this.latitude = post.getLatitude();
+        this.longitude = post.getLongitude();
     }
     public Integer getId() {
         return id;
@@ -109,4 +113,20 @@ public class PostDTO {
     public void setCreatorSurname(String creatorSurname){ this.creatorSurname = creatorSurname; }
     public String getCreatorName(){ return this.creatorName; }
     public String getCreatorSurname(){ return this.creatorSurname; }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
 }
