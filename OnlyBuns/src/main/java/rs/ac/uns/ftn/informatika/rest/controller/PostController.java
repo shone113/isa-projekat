@@ -40,9 +40,9 @@ public class PostController {
     private PostService postService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<Post>> getPosts(HttpSession httpSession){
-        Collection<Post> posts = postService.findAll();
-        return new ResponseEntity<Collection<Post>>(posts, HttpStatus.OK);
+    public ResponseEntity<List<PostDTO>> getPosts(HttpSession httpSession){
+        List<PostDTO> posts = postService.findAll();
+        return new ResponseEntity<List<PostDTO>>(posts, HttpStatus.OK);
     }
 
     @GetMapping(value="/all-for-logged-user",produces = MediaType.APPLICATION_JSON_VALUE)
@@ -165,6 +165,19 @@ public class PostController {
         Map<Month, Integer> yearlyStatystic = postService.getYearlyStatystic();
         return ResponseEntity.ok(yearlyStatystic);
     }
+//
+//    @GetMapping(value = "/removeCache")
+//    public ResponseEntity<String> removeFromCache() {
+//        postService.removeFromCache();
+//        return ResponseEntity.ok("Posts successfully removed from cache!");
+//    }
+
+//    @GetMapping("/caching/test")
+//    public  ResponseEntity<List<String>> testCaching() {
+//        List<String> images = postService.findPhotosForUser(1);
+//        List<String> images2 = postService.findPhotosForUser(1);
+//        return ResponseEntity.ok(images);
+//    }
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<String> handleEntityNotFoundException(EntityNotFoundException e) {

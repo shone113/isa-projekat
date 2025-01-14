@@ -4,11 +4,12 @@ import rs.ac.uns.ftn.informatika.rest.domain.Post;
 import rs.ac.uns.ftn.informatika.rest.dto.PostDTO;
 
 import java.util.Collection;
+import java.util.List;
 
 public interface IPostService {
-    Collection<Post> findAll();
+    List<PostDTO> findAll();
 
-    Post findOne(Integer id);
+    PostDTO findOne(Integer id);
 
     Post create(PostDTO post) throws Exception;
 

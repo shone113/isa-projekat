@@ -55,7 +55,7 @@ public class CommentService {
 
     @Transactional
     public CommentDTO create(CommentDTO commentDTO) {
-        Post post = postService.findOne(commentDTO.getPostId());
+        Post post = new Post(postService.findOne(commentDTO.getPostId()));
         User user = userService.findById(commentDTO.getCreatorId());
         Profile profile = profileService.getProfileByUserId(commentDTO.getCreatorId());
         Comment comment = new Comment(commentDTO);
