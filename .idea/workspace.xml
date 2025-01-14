@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="5acb3945-3c37-432d-a3f3-67e3c968a8cd" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+        <option value="Interface" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="2oKxFGBScl24RcpIYlJmllaAdpC" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Maven.rest-example [clean].executor": "Run",
+    "Maven.rest-example [test].executor": "Run",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "Spring Boot.RestExampleApplication.executor": "Run",
+    "git-widget-placeholder": "feat/RABBIT__CARE__ORGANIZATOINS",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/ISA/Projekat/Backend/isa-projekat/OnlyBuns",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager" selected="Spring Boot.RestExampleApplication">
+    <configuration name="imports.sql" type="DatabaseScript" editBeforeRun="true" temporary="true" nameIsGenerated="true">
+      <script-file value="$PROJECT_DIR$/src/main/resources/imports.sql" />
+      <script-mode>FILE</script-mode>
+      <method v="2" />
+    </configuration>
+    <configuration name="mvnw" type="ShConfigurationType" temporary="true">
+      <option name="SCRIPT_TEXT" value="" />
+      <option name="INDEPENDENT_SCRIPT_PATH" value="true" />
+      <option name="SCRIPT_PATH" value="$PROJECT_DIR$/mvnw" />
+      <option name="SCRIPT_OPTIONS" value="" />
+      <option name="INDEPENDENT_SCRIPT_WORKING_DIRECTORY" value="true" />
+      <option name="SCRIPT_WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="INDEPENDENT_INTERPRETER_PATH" value="true" />
+      <option name="INTERPRETER_PATH" value="/bin/sh" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="EXECUTE_IN_TERMINAL" value="true" />
+      <option name="EXECUTE_SCRIPT_FILE" value="true" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="RestExampleApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="rest-example" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="rs.ac.uns.ftn.informatika.rest.RestExampleApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Database Script.imports.sql" />
+        <item itemvalue="Shell Script.mvnw" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.23339.11" />
+        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.23339.11" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="5acb3945-3c37-432d-a3f3-67e3c968a8cd" name="Changes" comment="" />
+      <created>1730631963800</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1730631963800</updated>
+      <workItem from="1730631964809" duration="4492000" />
+      <workItem from="1730671947529" duration="242000" />
+      <workItem from="1730709810728" duration="2017000" />
+      <workItem from="1730741368899" duration="6894000" />
+      <workItem from="1730756088243" duration="1706000" />
+      <workItem from="1730837579186" duration="2789000" />
+      <workItem from="1730884072227" duration="10973000" />
+      <workItem from="1730902084711" duration="172000" />
+      <workItem from="1730913091693" duration="11870000" />
+      <workItem from="1730997209979" duration="529000" />
+      <workItem from="1731065128699" duration="2327000" />
+      <workItem from="1731084125972" duration="18158000" />
+      <workItem from="1731175462220" duration="104000" />
+      <workItem from="1731186511560" duration="42000" />
+      <workItem from="1731275514807" duration="5043000" />
+      <workItem from="1731317028899" duration="13798000" />
+      <workItem from="1731341002695" duration="1366000" />
+      <workItem from="1731342390550" duration="20030000" />
+      <workItem from="1731401924286" duration="4133000" />
+      <workItem from="1731409790272" duration="2366000" />
+      <workItem from="1731421256317" duration="1111000" />
+      <workItem from="1731440857261" duration="1844000" />
+      <workItem from="1731509836854" duration="669000" />
+      <workItem from="1731673960334" duration="262000" />
+      <workItem from="1731691715961" duration="6855000" />
+      <workItem from="1731707380287" duration="244000" />
+      <workItem from="1731755260626" duration="5002000" />
+      <workItem from="1732032894152" duration="4051000" />
+      <workItem from="1733671709954" duration="8031000" />
+      <workItem from="1733747813071" duration="9887000" />
+      <workItem from="1733776739859" duration="452000" />
+      <workItem from="1733824242244" duration="3559000" />
+      <workItem from="1733911558134" duration="15182000" />
+      <workItem from="1734017851258" duration="652000" />
+      <workItem from="1734994707906" duration="448000" />
+      <workItem from="1734996296540" duration="796000" />
+      <workItem from="1735924065142" duration="2689000" />
+      <workItem from="1735985651422" duration="6589000" />
+      <workItem from="1736104245183" duration="5758000" />
+      <workItem from="1736338125025" duration="703000" />
+      <workItem from="1736618786961" duration="508000" />
+      <workItem from="1736626562948" duration="6496000" />
+      <workItem from="1736861662792" duration="1821000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.lang.IllegalArgumentException" package="java.lang" />
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>
