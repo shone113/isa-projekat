@@ -38,6 +38,7 @@ public class Post {
     @JoinColumn(name = "profile_id")
     private Profile profile;
 
+
     @ManyToMany()
     @JoinTable(
             name = "post_likes",
@@ -45,6 +46,11 @@ public class Post {
             inverseJoinColumns = @JoinColumn(name = "profile_id")
     )
     private List<Profile> likedBy;
+
+    @Column(name = "longitude")
+    private double longitude;
+    @Column(name = "latitude")
+    private double latitude;
 
     public Post() {}
 
@@ -56,6 +62,8 @@ public class Post {
         this.publishingDate = postDTO.getPublishingDate();
         this.image = postDTO.getImage();
         this.comments = postDTO.getComments();
+        this.latitude = postDTO.getLatitude();
+        this.longitude = postDTO.getLongitude();
     }
 
     public Integer getId() {
@@ -132,4 +140,20 @@ public class Post {
 
     //public Integer getCreatorProfileId() { return this.profile != null && this.profile.getUser() != null ? this.profile.getUser().getId() : null;}
     public Integer getCreatorProfileId() { return this.profile.getId(); }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
 }
