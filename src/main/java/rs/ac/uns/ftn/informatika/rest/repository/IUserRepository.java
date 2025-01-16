@@ -4,12 +4,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Propagation;
 import rs.ac.uns.ftn.informatika.rest.domain.Greeting;
 import rs.ac.uns.ftn.informatika.rest.domain.User;
 
 import javax.persistence.LockModeType;
 import javax.persistence.QueryHint;
-import javax.transaction.Transactional;
+//import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -93,12 +95,10 @@ public interface IUserRepository  extends JpaRepository<User, Integer> {
 
     public int countUsersByEmail(String email);
 
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @Transactional
-    @QueryHints({
-            @QueryHint(name = "javax.persistence.lock.timeout", value = "0") // Ne čekaj na zaključavanje
-    })
+//    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    @Lock(LockModeType.PESSIMISTIC_FORCE_INCREMENT)
     @Query("SELECT u FROM User u WHERE u.id = :userId")
+    @QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value = "0")})
     User findUserByID(@Param("userId") Integer userId);
 
     //    @Lock(LockModeType.PESSIMISTIC_WRITE)

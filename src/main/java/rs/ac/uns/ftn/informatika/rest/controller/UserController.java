@@ -49,6 +49,13 @@ public class UserController {
         return ResponseEntity.ok(new UserDto(user));
     }
 
+    @GetMapping("/user-by-id/{id}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    public ResponseEntity<UserDto> findUserById(@PathVariable int id) {
+        User user = userService.findUserById(id);
+        return ResponseEntity.ok(new UserDto(user));
+    }
+
     @GetMapping("/registered")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserDto>> getRegistratedUsers() {

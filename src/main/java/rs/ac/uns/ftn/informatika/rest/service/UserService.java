@@ -2,21 +2,27 @@ package rs.ac.uns.ftn.informatika.rest.service;
 
 import io.github.resilience4j.ratelimiter.RequestNotPermitted;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import rs.ac.uns.ftn.informatika.rest.domain.Role;
 import rs.ac.uns.ftn.informatika.rest.domain.User;
 import rs.ac.uns.ftn.informatika.rest.repository.IUserRepository;
 
-import javax.transaction.Transactional;
+//import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional(readOnly = true)
 public class UserService {
     @Autowired
     private IUserRepository userRepository;
@@ -28,6 +34,8 @@ public class UserService {
     private RoleService roleService;
     @Autowired
     BloomFilterService bloomFilterService;
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Transactional
     public User register(User user) {
@@ -61,6 +69,25 @@ public class UserService {
 
     public User findById(Integer id) {
         return userRepository.findById(id).orElse(null);
+    }
+
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW, isolation = Isolation.READ_COMMITTED)
+    public User findUserById(Integer id) {
+        logger.info("> findOneById id:{}", id);
+        User user = userRepository.findUserByID(id);
+        return user;
+//
+//        try {
+//            logger.info("Attempting to lock User row with ID: {}", id);
+//            User user = userRepository.findUserByID(id);
+//            Thread.sleep(5000);
+//            logger.info("Successfully locked User row with ID: {}", id);
+//            return user;
+//        } catch (InterruptedException e) {
+//            Thread.currentThread().interrupt(); // Ponovo postavi status prekinutog threada
+//            logger.error("Thread was interrupted", e);
+//            throw new RuntimeException("Thread was interrupted", e);
+//        }
     }
 
     public List<User> findRegistratedUsers(){
