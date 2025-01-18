@@ -2,12 +2,14 @@ package rs.ac.uns.ftn.informatika.rest.repository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 import rs.ac.uns.ftn.informatika.rest.domain.Greeting;
 import rs.ac.uns.ftn.informatika.rest.domain.User;
 
+import javax.persistence.LockModeType;
+import javax.persistence.QueryHint;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -59,7 +61,6 @@ public interface IUserRepository  extends JpaRepository<User, Integer> {
                                        @Param("minPostsRange") Integer minPostsRange,
                                        @Param("maxPostsRange") Integer maxPostsRange);
 
-
     @Query("select u from User as u order by u.followingCount asc")
     public List<User> getSortedByFollowingCountAsc();
 
@@ -90,4 +91,34 @@ public interface IUserRepository  extends JpaRepository<User, Integer> {
     public List<User> getAllUsers(Pageable pageable);
 
     public int countUsersByEmail(String email);
+
+    @Lock(LockModeType.PESSIMISTIC_FORCE_INCREMENT)
+    @Query("SELECT u FROM User u WHERE u.id = :userId")
+    @QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value = "0")})
+    User findUserByID(@Param("userId") Integer userId);
+
+    //    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Transactional
+    @Modifying
+    @Query("UPDATE User u SET u.followingCount = u.followingCount + 1 WHERE u.id = :userId")
+    void incrementFollowingCount(@Param("userId") Integer userId);
+
+    //    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Transactional
+    @Modifying
+    @Query("UPDATE User u SET u.followingCount = u.followingCount - 1 WHERE u.id = :userId")
+    void decrementFollowingCount(@Param("userId") Integer userId);
+
+    //    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Transactional
+    @Modifying
+    @Query("UPDATE User u SET u.followersCount = u.followersCount + 1 WHERE u.id = :userId")
+    void incrementFollowersCount(@Param("userId") Integer userId);
+
+    //    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Transactional
+    @Modifying
+    @Query("UPDATE User u SET u.followersCount = u.followersCount - 1 WHERE u.id = :userId")
+    void decrementFollowersCount(@Param("userId") Integer userId);
+
 }
