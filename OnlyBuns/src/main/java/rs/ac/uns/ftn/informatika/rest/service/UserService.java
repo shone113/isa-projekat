@@ -132,4 +132,15 @@ public class UserService {
         Pageable pageable = PageRequest.of(0, 10);
         return userRepository.getAllUsers(pageable);
     }
+
+    public User updateUser(User user) {
+        User oldUser = userRepository.findById(user.getId()).orElse(null);
+        if(oldUser == null)
+            return null;
+        List<Role> roles = roleService.findByName("ROLE_USER");
+        user.setRoles(roles);
+        if(!oldUser.getPassword().equals(user.getPassword()))
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return userRepository.save(user);
+    }
 }
