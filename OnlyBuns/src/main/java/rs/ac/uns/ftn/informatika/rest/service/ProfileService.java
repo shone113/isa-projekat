@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.informatika.rest.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.util.LinkedCaseInsensitiveMap;
 import rs.ac.uns.ftn.informatika.rest.domain.Comment;
 import rs.ac.uns.ftn.informatika.rest.domain.Post;
@@ -15,7 +16,7 @@ import rs.ac.uns.ftn.informatika.rest.repository.IUserRepository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -105,9 +106,9 @@ public class ProfileService {
         System.out.println("Followers count: " + followerProfiles.size());
         return followerProfiles;
     }
-
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public List<Profile> followProfile(Integer id, Integer followId){
+        User currentUser = userRepository.findUserByID(id);
         List<Profile> followingProfiles = profileRepository.findFollowingProfiles(id);
         System.out.println("Fetched profiles count: " + followingProfiles.size());
 
@@ -130,22 +131,23 @@ public class ProfileService {
 
             //increment following for user
             Integer currentUserId = currentProfile.getUser().getId();
-            User currentUser = userRepository.findById(currentUserId)
-                    .orElseThrow(() -> new RuntimeException("Current user not found"));
+//            User currentUser = userRepository.findById(currentUserId)
+//                    .orElseThrow(() -> new RuntimeException("Current user not found"));
 
-            int currentFollowingCount = currentUser.getFollowingCount();
-            currentUser.setFollowingCount(currentFollowingCount + 1);
-            userRepository.save(currentUser);
+//            int currentFollowingCount = currentUser.getFollowingCount();
+//            currentUser.setFollowingCount(currentFollowingCount + 1);
+//            userRepository.save(currentUser);
+            userRepository.incrementFollowingCount(currentUserId);
 
             //increment followers for followed user
             Integer followingUserId = profileToFollow.getUser().getId();
-            User followingUser = userRepository.findById(followingUserId)
-                    .orElseThrow(() -> new RuntimeException("Current user not found"));
-
-            int followersCount = followingUser.getFollowersCount();
-            followingUser.setFollowersCount(followersCount + 1);
-            userRepository.save(followingUser);
-
+//            User followingUser = userRepository.findById(followingUserId)
+//                    .orElseThrow(() -> new RuntimeException("Current user not found"));
+//
+//            int followersCount = followingUser.getFollowersCount();
+//            followingUser.setFollowersCount(followersCount + 1);
+//            userRepository.save(followingUser);
+            userRepository.incrementFollowersCount(followingUserId);
             //profileRepository.saveAll(followingProfiles); // Samo ako je potrebno sačuvati promene
         }
         System.out.println("NEW Fetched profiles count: " + followingProfiles.size());
@@ -161,6 +163,7 @@ public class ProfileService {
 
     @Transactional
     public List<Profile> unfollowProfile(Integer id, Integer unfollowId) {
+        User currentUser = userRepository.findUserByID(id);
         List<Profile> followingProfiles = profileRepository.findFollowingProfiles(id);
         System.out.println("Fetched profiles count: " + followingProfiles.size());
 
@@ -183,21 +186,23 @@ public class ProfileService {
 
             //increment following for user
             Integer currentUserId = currentProfile.getUser().getId();
-            User currentUser = userRepository.findById(currentUserId)
-                    .orElseThrow(() -> new RuntimeException("Current user not found"));
-
-            int currentFollowingCount = currentUser.getFollowingCount();
-            currentUser.setFollowingCount(currentFollowingCount - 1);
-            userRepository.save(currentUser);
+//            User currentUser = userRepository.findById(currentUserId)
+//                    .orElseThrow(() -> new RuntimeException("Current user not found"));
+//
+//            int currentFollowingCount = currentUser.getFollowingCount();
+//            currentUser.setFollowingCount(currentFollowingCount - 1);
+//            userRepository.save(currentUser);
+            userRepository.decrementFollowingCount(currentUserId);
 
             //increment followers for followed user
             Integer followingUserId = profileToUnfollow.getUser().getId();
-            User followingUser = userRepository.findById(followingUserId)
-                    .orElseThrow(() -> new RuntimeException("Current user not found"));
-
-            int followersCount = followingUser.getFollowersCount();
-            followingUser.setFollowersCount(followersCount - 1);
-            userRepository.save(followingUser);
+//            User followingUser = userRepository.findById(followingUserId)
+//                    .orElseThrow(() -> new RuntimeException("Current user not found"));
+//
+//            int followersCount = followingUser.getFollowersCount();
+//            followingUser.setFollowersCount(followersCount - 1);
+//            userRepository.save(followingUser);
+            userRepository.decrementFollowersCount(followingUserId);
 
             //profileRepository.saveAll(followingProfiles); // Samo ako je potrebno sačuvati promene
         }
@@ -215,6 +220,8 @@ public class ProfileService {
         }
         return followerProfiles;
     }
+
+
 
     @Transactional
     public Map<String, Long> getProfilesWithPostsCount(){
