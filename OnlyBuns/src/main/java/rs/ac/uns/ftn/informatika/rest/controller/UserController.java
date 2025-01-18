@@ -6,6 +6,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.informatika.rest.domain.User;
 import rs.ac.uns.ftn.informatika.rest.dto.LoginDetailsDto;
@@ -177,5 +179,20 @@ public class UserController {
             userDtos.add(new UserDto(user));
         }
         return ResponseEntity.ok(userDtos);
+    }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<UserDto> updateUser(@PathVariable("id") int id, @RequestBody UserDto userDto) {
+        Authentication token = SecurityContextHolder.getContext().getAuthentication();
+        User u = (User) token.getPrincipal();
+        if(!u.getEmail().equals(userDto.getEmail()))
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        if(id != userDto.getId())
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        User user = userService.updateUser(new User(userDto));
+        if(user == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new UserDto(user), HttpStatus.OK);
     }
 }

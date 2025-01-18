@@ -116,4 +116,12 @@ public class UserDto {
     public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
+
+    public int getFollowersCount() {
+        return followersCount;
+    }
+
+    public void setFollowersCount(int followersCount) {
+        this.followersCount = followersCount;
+    }
 }
