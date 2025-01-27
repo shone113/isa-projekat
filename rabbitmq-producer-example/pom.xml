@@ -38,6 +38,20 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>com.simplemq</groupId>
+			<artifactId>simple-mq</artifactId>
+			<!--			<version>1.0.0</version>-->
+			<scope>system</scope>
+			<systemPath>${project.basedir}/libs/simple-mq.jar</systemPath>
+<!--			<exclusions>-->
+<!--				<exclusion>-->
+<!--					<groupId>org.slf4j</groupId>-->
+<!--					<artifactId>slf4j-simple</artifactId>-->
+<!--				</exclusion>-->
+<!--			</exclusions>-->
+		</dependency>
 	</dependencies>
 
 	<build>

@@ -21,5 +21,10 @@ public class ProducerController {
 		return ResponseEntity.ok().build();
 	}
 
+	@PostMapping(value="/smq/{queue}")
+	public ResponseEntity<String> sendMessageToSMQ(@PathVariable("queue") String queue, @RequestBody Organization message) {
+		producer.sendToSMQ(queue, message);
+		return ResponseEntity.ok().build();
+	}
 
 }

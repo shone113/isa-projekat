@@ -140,6 +140,14 @@
 			<artifactId>jackson-databind</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>com.simplemq</groupId>
+			<artifactId>simple-mq</artifactId>
+			<!--			<version>1.0.0</version>-->
+			<scope>system</scope>
+			<systemPath>${project.basedir}/libs/simple-mq.jar</systemPath>
+		</dependency>
+
 	</dependencies>
 
 	<build>
