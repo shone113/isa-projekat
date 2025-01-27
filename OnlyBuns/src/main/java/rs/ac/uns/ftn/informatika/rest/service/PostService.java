@@ -180,12 +180,18 @@ public class PostService implements IPostService {
         return postRepository.countPostsInLastMonth(date);
     }
 
+
+    @Cacheable(value = "mostPopularPosts")
     public List<Post> mostPopularPosts() {
+        System.out.println("Most popular posts of all time.");
         Pageable pageable = PageRequest.of(0, 10);
         return postRepository.findMostLikedPosts(pageable);
     }
 
+
+    @Cacheable(value = "mostPopularPostsInLastWeek")
     public List<Post> mostPopularPostsInLastWeek() {
+        System.out.println("Most popular posts in last week.");
         Pageable pageable = PageRequest.of(0, 5);
         LocalDate date = LocalDate.now().minusDays(7);
         return postRepository.findMostLikedPostsInLastWeek(date, pageable);
