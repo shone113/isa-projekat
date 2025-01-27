@@ -1,6 +1,8 @@
 package rs.ac.uns.ftn.informatika.rabbitmq;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.simplemq.client.HttpMessageQueueClient;
+import com.simplemq.client.MessageQueueClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -26,30 +28,7 @@ public class Producer {
 
 	public void sendToSMQ(String routingkey, Organization message){
 		log.info("Sending> ... Message=[" + message.getName() + "] RoutingKey=[" + routingkey + "]");
-		try {
-			URL url = new URL("http://localhost:8090/api/simplemq/produce?queue="+routingkey);
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-			connection.setRequestMethod("POST");
-			connection.setRequestProperty("Content-Type", "text/plain");
-			connection.setDoOutput(true);
-
-			ObjectMapper objectMapper = new ObjectMapper();
-
-			// Pretvori u JSON string
-			String jsonMessage = objectMapper.writeValueAsString(message);
-
-			System.out.println("JSON String: " + jsonMessage);
-
-			try (OutputStream os = connection.getOutputStream()) {
-				os.write(jsonMessage.getBytes());
-				os.flush();
-			}
-
-			int responseCode = connection.getResponseCode();
-			System.out.println("Response Code: " + responseCode);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		MessageQueueClient messageQueueClient = new HttpMessageQueueClient("http://localhost:8090/api/simplemq");
+		messageQueueClient.sendMessage(routingkey, message);
 	}
 }

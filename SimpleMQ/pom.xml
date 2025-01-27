@@ -9,14 +9,14 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	
-	<groupId>rs.ac.uns.ftn.informatika</groupId>
-	<artifactId>rest-example</artifactId>
+	<groupId>com.simplemq</groupId>
+	<artifactId>simple-mq</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	
 	<packaging>war</packaging>
-	
-	<name>rest-example</name>
-	<description>Demo project for Spring Boot</description>
+
+	<name>Simple MQ Library</name>
+	<description>Lightweight library for message queue interaction</description>
 
 	<properties>
 		<java.version>1.8</java.version>

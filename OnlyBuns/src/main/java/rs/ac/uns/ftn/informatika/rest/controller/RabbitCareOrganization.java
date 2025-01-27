@@ -1,6 +1,8 @@
 package rs.ac.uns.ftn.informatika.rest.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.simplemq.client.HttpMessageQueueClient;
+import com.simplemq.client.MessageQueueClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -34,32 +36,9 @@ public class RabbitCareOrganization {
 
     @Scheduled(cron = "${smq.cron}")
     private void smqHandler(){
-        try {
-            URL url = new URL("http://localhost:8090/api/simplemq/consume?queue=" + queue);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-            connection.setRequestMethod("GET");
-
-            int responseCode = connection.getResponseCode();
-            System.out.println("Response Code: " + responseCode);
-
-            if (responseCode == 200) {
-                try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
-                    String line;
-                    while ((line = br.readLine()) != null) {
-//                        System.out.println("Message received: " + line);
-                        logger.info("Consumer>: [name: " + line + "]");
-                        ObjectMapper objectMapper = new ObjectMapper();
-
-                        // Pretvori JSON string u objekat
-                        Organization organization = objectMapper.readValue(line, Organization.class);
-                        rabbitCareOrganizationService.save(organization);
-                    }
-                }
-            }
-        } catch (Exception e) {
-//            e.printStackTrace();
-            System.out.println("SimpleMQ is not working!");
-        }
+        MessageQueueClient messageQueueClient = new HttpMessageQueueClient("http://localhost:8090/api/simplemq");
+        Organization organization = messageQueueClient.receiveMessage(queue, Organization.class);
+        logger.info("Consumer>: [name: " + organization.getName() + "]");
+        rabbitCareOrganizationService.save(organization);
     }
 }
