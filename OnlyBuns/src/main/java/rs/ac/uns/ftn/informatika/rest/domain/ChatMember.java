@@ -38,4 +38,8 @@ public class ChatMember {
     public void setJoiningMessage(Integer joiningMessage){ this.joiningMessage = joiningMessage; }
 
     public Profile getProfile() { return profile; }
+
+    public Integer getChatId() { return chat.getId(); }
+
+    public Integer getProfileId() { return profile.getId(); }
 }

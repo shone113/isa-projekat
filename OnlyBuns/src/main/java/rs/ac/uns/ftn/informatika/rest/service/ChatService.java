@@ -80,8 +80,11 @@ public class ChatService {
 
     @Transactional
     public ChatDTO getOrCreateDm(Integer firstProfileId, Integer secondProfileId){
-        List<Chat> chats = chatRepository.findAll();
+        List<Chat> chats = chatRepository.getDmChats();
 
+        if(chats.size() == 0){
+            return createChatWithMembers(firstProfileId, secondProfileId);
+        }
         for (Chat chat : chats) {
             Set<Integer> profileIds = new HashSet<>();
             // Pretpostavljamo da chat ima korisnike sa ID-evima
@@ -91,23 +94,29 @@ public class ChatService {
             }
 
             // Proveravamo da li oba korisnika postoje u chat-u
-            if (profileIds.contains(firstProfileId) && profileIds.contains(secondProfileId) && chat.getChatType().equals(Chat.ChatType.DM)) {
+            if (profileIds.contains(firstProfileId) && profileIds.contains(secondProfileId)) {
                 return new ChatDTO(chat);
             }
         }
-        Chat newChat = new Chat();
-        newChat.setChatType(Chat.ChatType.DM);
+        return createChatWithMembers(firstProfileId, secondProfileId);
+    }
+
+    private ChatDTO createChatWithMembers(Integer firstProfileId, Integer secondProfileId){
+        Chat chat = new Chat();
+        chat.setChatType(Chat.ChatType.DM);
+        chat.setAdminProfile(profileService.getProfileById(firstProfileId));
         Profile firstProfile = profileService.getProfileById(firstProfileId);
         Profile secondProfile = profileService.getProfileById(secondProfileId);
         firstProfile.setPosts(null);
         secondProfile.setPosts(null);
-
-        newChat.setAdminProfile(firstProfile);
-//        newChat.setMembers(List.of(firstProfile, secondProfile)); // Postavljamo oba korisnika u novi chat
-        chatRepository.save(newChat); // Snimamo novi chat u bazu
-        chatMemberService.save(new ChatMember(newChat, firstProfile));
-        chatMemberService.save(new ChatMember(newChat, secondProfile));
-        return new ChatDTO(newChat);
+        ChatMember firstMember = new ChatMember(chat, firstProfile);
+        ChatMember secondMember = new ChatMember(chat, secondProfile);
+        ArrayList<ChatMember> members = new ArrayList<>();
+        members.add(firstMember);
+        members.add(secondMember);
+        chat.setMembers(members);
+        chatRepository.save(chat);
+        return new ChatDTO(chat);
     }
 
     @Transactional

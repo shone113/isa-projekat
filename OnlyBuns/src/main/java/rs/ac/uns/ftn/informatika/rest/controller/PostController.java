@@ -46,7 +46,6 @@ public class PostController {
     }
 
     @GetMapping(value="/all-for-logged-user",produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<List<PostDTO>> getPostsForLoggedUser(HttpSession httpSession){
         Authentication token = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) token.getPrincipal();
