@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.informatika.rest.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.util.LinkedCaseInsensitiveMap;
@@ -106,9 +107,11 @@ public class ProfileService {
         System.out.println("Followers count: " + followerProfiles.size());
         return followerProfiles;
     }
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public List<Profile> followProfile(Integer id, Integer followId){
-        User currentUser = userRepository.findUserByID(id);
+    @Transactional(propagation = Propagation.REQUIRED)
+//@Transactional(rollbackFor = PessimisticLockingFailureException.class)
+public List<Profile> followProfile(Integer id, Integer followId){
+//        User currentUser = userRepository.findUserByID(id);
+        User currentUser = userRepository.findByIdWithLock(id);
         List<Profile> followingProfiles = profileRepository.findFollowingProfiles(id);
         System.out.println("Fetched profiles count: " + followingProfiles.size());
 

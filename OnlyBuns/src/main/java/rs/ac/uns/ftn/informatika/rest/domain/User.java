@@ -20,7 +20,6 @@ public class User implements UserDetails {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-
     @Column(name = "followers_count", columnDefinition = "INTEGER")
     private Integer followersCount;
 
@@ -42,6 +41,8 @@ public class User implements UserDetails {
     @Column(name = "surname")
     private String surname;
 
+    @Version
+    private int version;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",

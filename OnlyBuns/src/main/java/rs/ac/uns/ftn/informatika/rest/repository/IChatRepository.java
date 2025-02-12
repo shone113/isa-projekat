@@ -16,4 +16,8 @@ public interface IChatRepository extends JpaRepository<Chat, Integer> {
 
     @Query("SELECT COUNT(m) FROM Message m WHERE m.chat.id = :chatId")
     Integer countMessagesForChat(@Param("chatId") Integer chatId);
+
+    @Query("SELECT c FROM Chat c WHERE c.chatType = 'DM'")
+    List<Chat> getDmChats();
+
 }

@@ -8,14 +8,19 @@ import org.springframework.transaction.annotation.Transactional;
 import rs.ac.uns.ftn.informatika.rest.domain.Greeting;
 import rs.ac.uns.ftn.informatika.rest.domain.User;
 
+import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
+import javax.persistence.PersistenceContext;
 import javax.persistence.QueryHint;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public interface IUserRepository  extends JpaRepository<User, Integer> {
+
     @Query("select '*' from User u where u.name like 'name'")
     public List<User> filterUsers(String name);
     public User getUserByEmail(String email);
@@ -97,6 +102,17 @@ public interface IUserRepository  extends JpaRepository<User, Integer> {
     @QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value = "0")})
     User findUserByID(@Param("userId") Integer userId);
 
+//    @Transactional
+//    @Lock(LockModeType.PESSIMISTIC_WRITE)
+//    @QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value = "0")})
+//    @Query("SELECT u FROM User u WHERE u.id = :id")
+//    User findByIdWithLock(@Param("id") Integer id);
+
+    @Transactional
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value = "0")})
+    User findByIdWithLock(Integer id);
+
     //    @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Transactional
     @Modifying
@@ -109,7 +125,7 @@ public interface IUserRepository  extends JpaRepository<User, Integer> {
     @Query("UPDATE User u SET u.followingCount = u.followingCount - 1 WHERE u.id = :userId")
     void decrementFollowingCount(@Param("userId") Integer userId);
 
-    //    @Lock(LockModeType.PESSIMISTIC_WRITE)
+//    @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Transactional
     @Modifying
     @Query("UPDATE User u SET u.followersCount = u.followersCount + 1 WHERE u.id = :userId")

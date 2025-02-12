@@ -2,14 +2,19 @@ package rs.ac.uns.ftn.informatika.rest;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.test.context.junit4.SpringRunner;
 import rs.ac.uns.ftn.informatika.rest.domain.User;
+import rs.ac.uns.ftn.informatika.rest.repository.IUserRepository;
+import rs.ac.uns.ftn.informatika.rest.repository.IUserRepositoryImpl;
 import rs.ac.uns.ftn.informatika.rest.service.ProfileService;
 import rs.ac.uns.ftn.informatika.rest.service.UserService;
 
+import javax.persistence.LockTimeoutException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -19,67 +24,71 @@ import java.util.concurrent.Future;
 @SpringBootTest
 public class FollowCountIncrementTest {
 
+    private static final Logger logger = LoggerFactory.getLogger(FollowCountIncrementTest.class);
+
     @Autowired
     private ProfileService profileService;
 
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private IUserRepositoryImpl userRepositoryImpl;
+
+    @Autowired
+    private IUserRepository userRepository;
     @Test(expected = PessimisticLockingFailureException.class)
     public void testPessimisticLockingScenario() throws Throwable {
-
         ExecutorService executor = Executors.newFixedThreadPool(2);
-        executor.submit(new Runnable() {
 
-            @Override
-            public void run() {
-                System.out.println("Startovan Thread 1");
-                try { Thread.sleep(5000); } catch (InterruptedException e) { }// otprilike 150 milisekundi posle prvog threada krece da se izvrsava drugi
-                profileService.followProfile(4, 2); // izvrsavanje transakcione metode traje oko 200 milisekundi
-//                userService.findUserById(1);
-//                try {
-//                    Thread.sleep(5000);
-//                    userService.findUserById(1);
-//                } catch (InterruptedException e) {
-//                    Thread.currentThread().interrupt(); // Ponovo postavi status prekinutog threada
-//                    throw new RuntimeException("Thread was interrupted", e);
-//                }
+        Future<?> future1 = executor.submit(() -> {
+            logger.info("Startovan Thread 1");
+
+            try {
+                Thread.sleep(500); // Smanji sleep kako bi se transakcije preklopile
+            } catch (LockTimeoutException e) {
+                throw new PessimisticLockingFailureException("Could not obtain lock on row", e);
             }
-        });
-        Future<?> future2 = executor.submit(new Runnable() {
-
-            @Override
-            public void run() {
-                System.out.println("Startovan Thread 2");
-                try { Thread.sleep(5000); } catch (InterruptedException e) { }// otprilike 150 milisekundi posle prvog threada krece da se izvrsava drugi
-                /*
-                 * Drugi thread pokusava da izvrsi transakcionu metodu findOneById dok se prvo izvrsavanje iz prvog threada jos nije zavrsilo.
-                 * Metoda je oznacena sa NO_WAIT, sto znaci da drugi thread nece cekati da prvi thread zavrsi sa izvrsavanjem metode vec ce odmah dobiti PessimisticLockingFailureException uz poruke u logu:
-                 * [pool-1-thread-2] o.h.engine.jdbc.spi.SqlExceptionHelper : SQL Error: 0, SQLState: 55P03
-                 * [pool-1-thread-2] o.h.engine.jdbc.spi.SqlExceptionHelper : ERROR: could not obtain lock on row in relation "product"
-                 * Prema Postgres dokumentaciji https://www.postgresql.org/docs/9.3/errcodes-appendix.html, kod 55P03 oznacava lock_not_available
-                 */
-//                try {
-//                    Thread.sleep(5000);
-//                    userService.findUserById(1);
-//                } catch (InterruptedException e) {
-//                    Thread.currentThread().interrupt(); // Ponovo postavi status prekinutog threada
-//                    throw new RuntimeException("Thread was interrupted", e);
-//                }
-//                userService.findUserById(1);
-                profileService.followProfile(4, 3);
-
+            catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                logger.error("Thread 1 je prekinut", e);
             }
+            logger.info("Thread 1 pokušava da zaključa red za User sa ID: 4");
+//            userRepository.findByIdWithLock(4); // Prva transakcija
+            profileService.followProfile(4, 2);
+            logger.info("Thread 1 završio sa zaključavanjem");
         });
+
+        Future<?> future2 = executor.submit(() -> {
+            logger.info("Startovan Thread 2");
+            try {
+                Thread.sleep(500); // Smanji sleep kako bi se transakcije preklopile
+            }catch (LockTimeoutException e) {
+                throw new PessimisticLockingFailureException("Could not obtain lock on row", e);
+            }
+            catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                logger.error("Thread 2 je prekinut", e);
+            }
+            logger.info("Thread 2 pokušava da zaključa red za User sa ID: 4");
+//            userRepository.findByIdWithLock(4); // Druga transakcija, isti red
+            profileService.followProfile(4, 3);
+            logger.info("Thread 2 završio sa zaključavanjem");
+        });
+
         try {
-            future2.get(); // podize ExecutionException za bilo koji izuzetak iz drugog child threada
-            System.out.println("Expected PessimisticLockingFailureException but none was thrown"); // u pitanju je bas PessimisticLockingFailureException
-        } catch (ExecutionException e) {
-            System.out.println("Exception from thread " + e.getCause().getClass()); // u pitanju je bas PessimisticLockingFailureException
-            throw e.getCause();
+            future2.get(); // Čekamo da se drugi thread završi
+        }catch (LockTimeoutException e) {
+            throw new PessimisticLockingFailureException("Could not obtain lock on row", e);
+        }
+        catch (ExecutionException e) {
+            logger.error("Exception from thread", e);
+            throw e.getCause(); // Očekujemo PessimisticLockingFailureException
         } catch (InterruptedException e) {
+            logger.error("Test je prekinut", e);
             e.printStackTrace();
         }
+
         executor.shutdown();
     }
 }
