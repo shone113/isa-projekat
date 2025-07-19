@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5acb3945-3c37-432d-a3f3-67e3c968a8cd" name="Changes" comment="" />
+    <list default="true" id="5acb3945-3c37-432d-a3f3-67e3c968a8cd" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OnlyBuns/cache-example/cache/.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/OnlyBuns/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/OnlyBuns/pom.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -57,9 +61,9 @@
     "RequestMappingsPanelWidth1": "75",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "Spring Boot.RestExampleApplication.executor": "Run",
-    "git-widget-placeholder": "feat/RABBIT__CARE__ORGANIZATOINS",
+    "git-widget-placeholder": "fix/PROJECT__PRESENTATION",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/ISA/Projekat/Backend/isa-projekat/OnlyBuns",
+    "last_opened_file_path": "C:/Users/nenad/Desktop/isa-back-4/isa-projekat/OnlyBuns",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -91,7 +95,7 @@
       <method v="2" />
     </configuration>
     <configuration name="RestExampleApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
-      <module name="rest-example" />
+      <module name="isa-projekat" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="rs.ac.uns.ftn.informatika.rest.RestExampleApplication" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -163,6 +167,7 @@
       <workItem from="1736618786961" duration="508000" />
       <workItem from="1736626562948" duration="6496000" />
       <workItem from="1736861662792" duration="1821000" />
+      <workItem from="1752945928754" duration="61000" />
     </task>
     <servers />
   </component>

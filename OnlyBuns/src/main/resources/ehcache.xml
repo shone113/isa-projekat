@@ -64,4 +64,11 @@
             </resources>
      </cache>
 
+    <cache alias="image" uses-template="default">
+        <key-type>java.lang.Object</key-type>
+        <value-type>java.lang.Object</value-type>
+        <resources>
+            <heap>100</heap>
+        </resources>
+    </cache>
 </config>
