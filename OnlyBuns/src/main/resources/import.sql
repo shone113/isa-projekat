@@ -17,6 +17,7 @@ INSERT INTO USER_ROLE (user_id, role_id) VALUES (6, 2);
 
 
 INSERT INTO public.profile(user_id) VALUES ( 1);
+INSERT INTO public.profile(user_id) VALUES ( 2);
 INSERT INTO public.profile(user_id) VALUES ( 3);
 INSERT INTO public.profile(user_id) VALUES ( 4);
 INSERT INTO public.profile(user_id) VALUES ( 5);
@@ -28,10 +29,10 @@ INSERT INTO public.profile_follower(profile_id, follower_profile_id) VALUES (2, 
 INSERT INTO public.profile_follower(profile_id, follower_profile_id) VALUES (3, 1);
 
 INSERT INTO public.posts(description, image, likes_count, publishing_date, profile_id, longitude, latitude)VALUES ('divan dan za druzenje', 'bunny.jpg', 35, '2023-11-15', 1, 20.4489, 44.7866);
-INSERT INTO public.posts(description, image, likes_count, publishing_date, profile_id, longitude, latitude)VALUES ( 'zeccc', 'bunny2.webp', 160, '2024-12-12', 1,  20.3489, 44.7966);
-INSERT INTO public.posts(description, image, likes_count, publishing_date, profile_id, longitude, latitude)VALUES ( 'mika', 'bunny.jpg', 255, '2024-12-25',  2, 20.7489, 44.9866);
-INSERT INTO public.posts(description, image, likes_count, publishing_date, profile_id, longitude, latitude)VALUES ( 'zeka zec', 'bunny.jpg', 255, '2024-12-26',  1, 20.9489, 45.7866);
-INSERT INTO public.posts(description, image, likes_count, publishing_date, profile_id, longitude, latitude)VALUES ( 'NOVI Zec', 'bunny.jpg', 255, '2024-12-24',  2, 21.0489, 45.7866);
+INSERT INTO public.posts(description, image, likes_count, publishing_date, profile_id, longitude, latitude)VALUES ( 'zeccc', 'bunny2.webp', 160, '2024-12-12', 4,  20.3489, 44.7966);
+INSERT INTO public.posts(description, image, likes_count, publishing_date, profile_id, longitude, latitude)VALUES ( 'mika', 'bunny.jpg', 255, '2024-12-25',  5, 20.7489, 44.9866);
+INSERT INTO public.posts(description, image, likes_count, publishing_date, profile_id, longitude, latitude)VALUES ( 'zeka zec', 'bunny.jpg', 255, '2024-12-26',  4, 20.9489, 45.7866);
+INSERT INTO public.posts(description, image, likes_count, publishing_date, profile_id, longitude, latitude)VALUES ( 'NOVI Zec', 'bunny.jpg', 255, '2024-12-24',  5, 21.0489, 45.7866);
 
 INSERT INTO public.comments(content, creation_date, creator_id, post_id)VALUES ('wow', '2024-12-26', 1, 1);
 

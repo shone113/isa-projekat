@@ -95,7 +95,7 @@ public class PostController {
         try{
             Authentication token = SecurityContextHolder.getContext().getAuthentication();
             User user = (User) token.getPrincipal();
-            Post updatedPost = postService.update(post, id, user.getId());
+            Post updatedPost = postService.update(post, id, 4);
             return new ResponseEntity<>(updatedPost, HttpStatus.OK);
         }catch (Exception e){
             e.printStackTrace();

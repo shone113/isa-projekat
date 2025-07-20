@@ -35,7 +35,7 @@ public class Post {
     private List<Comment> comments;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "profile_id")
+    @JoinColumn(name = "profile_id", nullable = false)
     private Profile profile;
 
 

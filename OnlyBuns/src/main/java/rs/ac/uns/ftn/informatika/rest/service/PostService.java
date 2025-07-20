@@ -145,11 +145,14 @@ public class PostService implements IPostService {
 
     @Transactional
     public Post update(PostDTO post, Integer postId, Integer userId) throws Exception {
-        Post postToUpdate = new Post(findOne(postId));
+        //Post postToUpdate = new Post(findOne(postId));
+        Post postToUpdate = postRepository.findById(postId)
+                .orElseThrow(() -> new Exception("Post not found"));    
+
         if (postToUpdate == null) {
             throw new Exception("Trazeni entitet nije pronadjen.");
         }
-        Integer creatorProfileId = profileService.getProfileByUserId(userId).getId();
+        Integer creatorProfileId = profileService.getProfileIdByUserId(userId);
         if(postToUpdate.getCreatorProfileId() != creatorProfileId){
             throw new Exception("Unauthenticated user");
         }

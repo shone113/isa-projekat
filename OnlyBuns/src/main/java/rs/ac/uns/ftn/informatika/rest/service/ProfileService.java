@@ -67,6 +67,9 @@ public class ProfileService {
     }
 
     @Transactional
+    public Integer getProfileIdByUserId(Integer userId) { return profileRepository.findProfileIdByUserId(userId);}
+
+    @Transactional
     public List<Profile> getAll(){
 //        return profileRepository.findAll();
         try {
