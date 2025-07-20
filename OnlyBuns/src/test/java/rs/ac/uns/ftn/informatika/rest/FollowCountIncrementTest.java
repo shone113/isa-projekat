@@ -54,7 +54,7 @@ public class FollowCountIncrementTest {
                 logger.error("Thread 1 je prekinut", e);
             }
             logger.info("Thread 1 pokušava da zaključa red za User sa ID: 4");
-//            userRepository.findByIdWithLock(4); // Prva transakcija
+            userRepository.findByIdWithLock(4); // Prva transakcija
             profileService.followProfile(4, 2);
             logger.info("Thread 1 završio sa zaključavanjem");
         });
@@ -62,7 +62,8 @@ public class FollowCountIncrementTest {
         Future<?> future2 = executor.submit(() -> {
             logger.info("Startovan Thread 2");
             try {
-                Thread.sleep(500); // Smanji sleep kako bi se transakcije preklopile
+                Thread.sleep(100); // Thread 1 – prvi krene i zaključa red
+                Thread.sleep(500);
             }catch (LockTimeoutException e) {
                 throw new PessimisticLockingFailureException("Could not obtain lock on row", e);
             }
@@ -71,7 +72,7 @@ public class FollowCountIncrementTest {
                 logger.error("Thread 2 je prekinut", e);
             }
             logger.info("Thread 2 pokušava da zaključa red za User sa ID: 4");
-//            userRepository.findByIdWithLock(4); // Druga transakcija, isti red
+            userRepository.findByIdWithLock(4); // Druga transakcija, isti red
             profileService.followProfile(4, 3);
             logger.info("Thread 2 završio sa zaključavanjem");
         });
