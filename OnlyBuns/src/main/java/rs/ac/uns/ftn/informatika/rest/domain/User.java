@@ -200,4 +200,12 @@ public class User implements UserDetails {
     public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
 }

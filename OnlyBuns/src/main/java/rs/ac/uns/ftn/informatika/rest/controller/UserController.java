@@ -9,6 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import rs.ac.uns.ftn.informatika.rest.domain.Role;
 import rs.ac.uns.ftn.informatika.rest.domain.User;
 import rs.ac.uns.ftn.informatika.rest.dto.LoginDetailsDto;
 import rs.ac.uns.ftn.informatika.rest.dto.UserDto;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "api/user")
@@ -171,9 +173,13 @@ public class UserController {
     }
 
     @GetMapping("/most-actived-users")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<List<UserDto>> getMostActivedUsers(){
-        List<User> users = userService.getAllUsers();
+//        List<User> users = userService.getMostActived();
+        List<User> users = userService.getAllUsers().stream()
+                .filter(user -> user.getRoles().stream()
+                        .noneMatch(role -> role.getName().equals("ROLE_ADMIN")))
+                .collect(Collectors.toList());
         List<UserDto> userDtos = new ArrayList<>();
         for (User user : users) {
             userDtos.add(new UserDto(user));

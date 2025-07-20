@@ -13,6 +13,7 @@ import rs.ac.uns.ftn.informatika.rest.domain.User;
 import rs.ac.uns.ftn.informatika.rest.repository.IUserRepository;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -141,6 +142,13 @@ public class UserService {
         user.setRoles(roles);
         if(!oldUser.getPassword().equals(user.getPassword()))
             user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        user.setVersion(oldUser.getVersion());
         return userRepository.save(user);
+    }
+
+    public List<User> getMostActived(){
+        LocalDate date = LocalDate.now().minusDays(7);
+        return userRepository.findMostActives(date, 10);
     }
 }
