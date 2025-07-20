@@ -12,6 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import javax.persistence.PersistenceContext;
 import javax.persistence.QueryHint;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -137,4 +138,9 @@ public interface IUserRepository  extends JpaRepository<User, Integer> {
     @Query("UPDATE User u SET u.followersCount = u.followersCount - 1 WHERE u.id = :userId")
     void decrementFollowersCount(@Param("userId") Integer userId);
 
+//    @Query(value = " SELECT * FROM users WHERE id IN (SELECT u.id FROM post_likes pl JOIN posts p ON pl.post_id = p.id  JOIN profile pr ON pl.profile_id = pr.id JOIN users u ON pr.user_id = u.id  WHERE p.publishing_date = :date GROUP BY pl.profile_id, u.id)", nativeQuery = true)
+//    public List<User> findMostActives(@Param("date") LocalDate date, Pageable pageable);
+
+    @Query(value = "SELECT u.* FROM post_likes pl  JOIN posts p ON pl.post_id = p.id  JOIN profile pr ON pl.profile_id = pr.id  JOIN users u ON pr.user_id = u.id  WHERE p.publishing_date = :publishingDate  GROUP BY u.id ORDER BY COUNT(pl.post_id) DESC LIMIT :limit", nativeQuery = true)
+    List<User> findMostActives(@Param("publishingDate") LocalDate publishingDate, @Param("limit") int limit);
 }

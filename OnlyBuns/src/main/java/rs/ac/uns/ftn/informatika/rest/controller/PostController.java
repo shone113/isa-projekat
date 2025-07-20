@@ -120,28 +120,28 @@ public class PostController {
     }
 
     @GetMapping("/total-number-of-posts")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<Integer> getTotalNumberOfPosts(){
         int result = postService.totalNumberOfPosts();
         return ResponseEntity.ok(result);
     }
 
     @GetMapping("/total-number-of-posts-last-month")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<Integer> getTotalNumberOfPostsInLastMonth(){
         int result = postService.totalNumberOfPostsInLastMonth();
         return ResponseEntity.ok(result);
     }
 
     @GetMapping("/most-popular-posts")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<List<Post>> getMostPopularPosts(){
         List<Post> result = postService.mostPopularPosts();
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping("/most-popular-posts-last-week")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<List<Post>> getMostPopularPostsInlastWeek(){
         List<Post> result = postService.mostPopularPostsInLastWeek();
         return new ResponseEntity<>(result, HttpStatus.OK);
