@@ -34,7 +34,7 @@ public class RabbitCareOrganization {
         rabbitCareOrganizationService.save(object);
     }
 
-    @Scheduled(cron = "${smq.cron}")
+    //@Scheduled(cron = "${smq.cron}")
     private void smqHandler(){
         MessageQueueClient messageQueueClient = new HttpMessageQueueClient("http://localhost:8090/api/simplemq");
         Organization organization = messageQueueClient.receiveMessage(queue, Organization.class);

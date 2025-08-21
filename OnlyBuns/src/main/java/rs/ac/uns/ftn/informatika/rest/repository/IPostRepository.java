@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import rs.ac.uns.ftn.informatika.rest.domain.Comment;
 import rs.ac.uns.ftn.informatika.rest.domain.Post;
 import org.springframework.data.domain.Pageable;
+import rs.ac.uns.ftn.informatika.rest.domain.Profile;
 import rs.ac.uns.ftn.informatika.rest.dto.ImageDTO;
 import rs.ac.uns.ftn.informatika.rest.dto.PostDTO;
 
@@ -35,6 +36,9 @@ public interface IPostRepository extends JpaRepository<Post, Integer> {
 
     @Query("SELECT p FROM Post p ORDER BY p.publishingDate DESC")
     List<Post> findAllPostsOrderByCreatedAtDesc();
+
+    @Query("SELECT SUM(p.likesCount) FROM Post p WHERE p.profile = :profile")
+    Long sumLikesCountByProfile(@Param("profile") Profile profile);
 
     @Query("SELECT new rs.ac.uns.ftn.informatika.rest.dto.PostDTO(p) FROM Post p ORDER BY p.publishingDate DESC")
     List<PostDTO> findAllPostsWithoutImagesDesc();

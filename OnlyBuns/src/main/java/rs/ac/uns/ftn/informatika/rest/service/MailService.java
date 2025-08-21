@@ -33,6 +33,17 @@ public class MailService {
         System.out.println("Email poslat!");
     }
 
+    public void SendInactivityEmail(String toEmail, String subject, String body) throws MailException, InterruptedException {
+        SimpleMailMessage mail = new SimpleMailMessage();
+        mail.setTo(toEmail);
+        mail.setFrom(env.getProperty("spring.mail.username"));
+        mail.setSubject(subject);
+        mail.setText(body);
+        javaMailSender.send(mail);
+
+        System.out.println("Email poslat na adresu:" + toEmail);
+    }
+
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     private static final Random RANDOM = new Random();
 

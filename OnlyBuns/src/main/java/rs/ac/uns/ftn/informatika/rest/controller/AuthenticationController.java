@@ -21,6 +21,7 @@ import rs.ac.uns.ftn.informatika.rest.service.UserService;
 import rs.ac.uns.ftn.informatika.rest.util.TokenUtils;
 
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -62,6 +63,7 @@ public class AuthenticationController {
 
         // Kreiraj token za tog korisnika
         User user = (User) authentication.getPrincipal();
+        userService.updateLastLogInTimeForUser(user);
         String jwt = tokenUtils.generateToken(user);
         int expiresIn = tokenUtils.getExpiredIn();
 

@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import rs.ac.uns.ftn.informatika.rest.dto.UserDto;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -54,6 +55,9 @@ public class User implements UserDetails {
     private double longitude;
     @Column(name = "latitude")
     private double latitude;
+
+    @Column(name = "last_login_date")
+    private LocalDateTime lastLoginDate;
 
     public User() {
     }
@@ -121,6 +125,10 @@ public class User implements UserDetails {
     public String getPassword() {
         return password;
     }
+
+    public LocalDateTime getLastLoginDate() { return lastLoginDate; }
+
+    public void setLastLoginDate(LocalDateTime time) { this.lastLoginDate = time;}
 
     @Override
     public String getUsername() {

@@ -14,6 +14,7 @@ import rs.ac.uns.ftn.informatika.rest.repository.IUserRepository;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -132,6 +133,11 @@ public class UserService {
     public List<User> getAllUsers() {
         Pageable pageable = PageRequest.of(0, 10);
         return userRepository.getAllUsers(pageable);
+    }
+
+    public void updateLastLogInTimeForUser(User user) {
+        user.setLastLoginDate(LocalDateTime.now());
+        userRepository.save(user);
     }
 
     public User updateUser(User user) {

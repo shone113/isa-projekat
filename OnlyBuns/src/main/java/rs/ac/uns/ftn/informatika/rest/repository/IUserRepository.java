@@ -13,6 +13,7 @@ import javax.persistence.LockModeType;
 import javax.persistence.PersistenceContext;
 import javax.persistence.QueryHint;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -75,6 +76,8 @@ public interface IUserRepository  extends JpaRepository<User, Integer> {
 
     @Query("select u from User as u order by u.followingCount desc")
     public List<User> getSortedByFollowingCountDesc();
+
+    public List<User> findByLastLoginDateBefore(LocalDateTime dateTime);
 
     @Query("select u from User as u order by u.followingCount desc")
     public Page<User> getSortedByFollowingCountDescPaged(Pageable page);
