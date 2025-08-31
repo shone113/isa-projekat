@@ -4,7 +4,10 @@ import javax.persistence.*;
 import javax.xml.crypto.Data;
 import javax.xml.stream.Location;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import rs.ac.uns.ftn.informatika.rest.dto.PostDTO;
 import rs.ac.uns.ftn.informatika.rest.domain.Comment;
 
@@ -26,7 +29,7 @@ public class Post {
     private Long publishingLocationId;
 
     @Column(name = "publishing_date", nullable = false)
-    private LocalDate publishingDate;
+    private LocalDateTime publishingDate;
 
     @Column(name = "image", nullable = true)
     private String image;
@@ -36,6 +39,7 @@ public class Post {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "profile_id", nullable = false)
+    @JsonIgnore
     private Profile profile;
 
 
@@ -51,6 +55,9 @@ public class Post {
     private double longitude;
     @Column(name = "latitude")
     private double latitude;
+
+    @Version
+    private Long version;
 
     public Post() {}
 
@@ -98,11 +105,16 @@ public class Post {
 //        this.publishingLocationId = publishingLocationId;
 //    }
 
-    public LocalDate getPublishingDate() {
+
+    public Profile getProfile() { return profile; }
+
+    public void setProfile(Profile profile) { this.profile = profile; }
+
+    public LocalDateTime getPublishingDate() {
         return publishingDate;
     }
 
-    public void setPublishingDate(LocalDate publishingDate) {
+    public void setPublishingDate(LocalDateTime publishingDate) {
         this.publishingDate = publishingDate;
     }
 

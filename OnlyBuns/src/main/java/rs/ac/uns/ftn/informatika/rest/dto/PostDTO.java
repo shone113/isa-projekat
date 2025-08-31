@@ -4,6 +4,7 @@ import rs.ac.uns.ftn.informatika.rest.domain.Comment;
 import rs.ac.uns.ftn.informatika.rest.domain.Post;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,7 @@ public class PostDTO {
     private String description;
     private int likesCount;
 //    private int publishingLocationId;
-    private LocalDate publishingDate;
+    private LocalDateTime publishingDate;
     private String image;
     private List<Comment> comments;
     private Integer creatorProfileId;
@@ -22,6 +23,7 @@ public class PostDTO {
     private double longitude;
     private double latitude;
 
+
     public PostDTO() {}
 
     public PostDTO(Integer id, String description, int likesCount, int creatorId, String creatorName, String creatorSurname){
@@ -30,9 +32,9 @@ public class PostDTO {
         this.description = description;
         this.likesCount = likesCount;
 //        this.publishingLocationId = publishingLocationId;
-        this.publishingDate = LocalDate.now();
         this.image = "";
         this.comments = new ArrayList<>();
+        this.publishingDate = LocalDateTime.now();
         this.creatorProfileId = creatorId;
         this.creatorName = creatorName;
         this.creatorSurname = creatorSurname;
@@ -83,11 +85,11 @@ public class PostDTO {
 //        this.publishingLocationId = publishingLocationId;
 //    }
 
-    public LocalDate getPublishingDate() {
+    public LocalDateTime getPublishingDate() {
         return publishingDate;
     }
 
-    public void setPublishingDate(LocalDate publishingDate) {
+    public void setPublishingDate(LocalDateTime publishingDate) {
         this.publishingDate = publishingDate;
     }
 

@@ -140,6 +140,11 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public void increasePostCount(int userId){
+        User user = findById(userId);
+        userRepository.save(user);
+    }
+
     public User updateUser(User user) {
         User oldUser = userRepository.findById(user.getId()).orElse(null);
         if(oldUser == null)

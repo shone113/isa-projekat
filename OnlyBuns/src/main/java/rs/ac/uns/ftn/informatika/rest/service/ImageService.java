@@ -3,10 +3,16 @@ package rs.ac.uns.ftn.informatika.rest.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import rs.ac.uns.ftn.informatika.rest.domain.Post;
 import rs.ac.uns.ftn.informatika.rest.dto.ImageDTO;
 import rs.ac.uns.ftn.informatika.rest.repository.IPostRepository;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,19 +27,21 @@ public class ImageService {
     private ProfileService profileService;
 
 
-//    @Cacheable(value = "image", key = "#userId")
-//    public List<String> findPhotosForUser(Integer userId) {
-//        List<Post> posts = postRepository.findAllPostsOrderByCreatedAtDesc();
-//        List<String> photos = new ArrayList<>();
-//
-//        for (Post post : posts) {
-//            if (profileService.doesFollowPublisher(userId, post.getCreatorProfileId())) {
-//                photos.add(post.getImage()); // Pretpostavljam da je `getPhotos()` lista URL-ova slika
-//            }
-//        }
-//        System.out.println("Fetching photos for user ID: " + userId); // Log za proveru keša
-//        return photos;
-//    }
+    private final String UPLOAD_DIR = "src/main/resources/static/images";
+
+    public String saveImage(MultipartFile file) throws IOException {
+        String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+        Path uploadPath = Paths.get(UPLOAD_DIR);
+
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
+
+        Path filePath = uploadPath.resolve(fileName);
+        Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+        return "/images/" + fileName;
+    }
 
     @Cacheable(value = "image", key = "#userId")
     public Map<Integer, String> findPhotosForUser(Integer userId) {

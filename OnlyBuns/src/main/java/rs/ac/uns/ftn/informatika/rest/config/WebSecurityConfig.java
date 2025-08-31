@@ -90,7 +90,7 @@ public class WebSecurityConfig {
 
         // sve neautentifikovane zahteve obradi uniformno i posalji 401 gresku
         http.exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint);
-        http.authorizeRequests().antMatchers(HttpMethod.POST, "/auth/login").permitAll().antMatchers("/auth/**").permitAll()		// /auth/**
+        http.authorizeRequests().antMatchers(HttpMethod.POST, "/auth/login").permitAll().antMatchers("/auth/**").permitAll().antMatchers("/images/**").permitAll()		// /auth/**
                 .antMatchers(HttpMethod.GET, "/api/post").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/profile/**").permitAll()
                 .antMatchers(HttpMethod.PUT, "/api/profile/**").hasRole("USER")

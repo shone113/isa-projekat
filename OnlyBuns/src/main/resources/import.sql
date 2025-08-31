@@ -38,15 +38,25 @@ INSERT INTO public.profile_follower(profile_id, follower_profile_id) VALUES (5, 
 INSERT INTO public.profile_following(profile_id, following_profile_id) VALUES (3, 6);
 INSERT INTO public.profile_follower(profile_id, follower_profile_id) VALUES (6, 3);
 
-INSERT INTO public.posts(description, image, likes_count, publishing_date, profile_id, longitude, latitude)VALUES ('divan dan za druzenje', 'bunny.jpg', 5, '2024-11-15', 1, 20.4489, 44.7866);
-INSERT INTO public.posts(description, image, likes_count, publishing_date, profile_id, longitude, latitude)VALUES ( 'zeccc', 'bunny2.webp', 6, '2024-12-12', 1,  20.3489, 44.7966);
-INSERT INTO public.posts(description, image, likes_count, publishing_date, profile_id, longitude, latitude)VALUES ( 'mika', 'zec1.jpg', 5, '2025-3-25',  2, 20.7489, 44.9866);
-INSERT INTO public.posts(description, image, likes_count, publishing_date, profile_id, longitude, latitude)VALUES ( 'zeka zec', 'zec2.jpg', 5, '2025-4-26',  1, 20.9489, 45.7866);
-INSERT INTO public.posts(description, image, likes_count, publishing_date, profile_id, longitude, latitude)VALUES ( 'NOVI Zec', 'zec5.jpg', 4, '2025-4-24',  2, 21.0489, 45.7866);
-INSERT INTO public.posts(description, image, likes_count, publishing_date, profile_id, longitude, latitude)VALUES ( 'janov zec', 'zec6.jpeg', 3, '2025-7-20',  3, 22.0489, 45.7866);
-INSERT INTO public.posts(description, image, likes_count, publishing_date, profile_id, longitude, latitude)VALUES ( 'moj zec', 'zec4.webp', 3, '2025-7-19',  4, 22.3489, 45.9866);
-INSERT INTO public.posts(description, image, likes_count, publishing_date, profile_id, longitude, latitude)VALUES ( 'dusko, pera i zeka', 'zec3.jpg', 2, '2025-7-20',  5, 22.0489, 45.7866);
-INSERT INTO public.posts(description, image, likes_count, publishing_date, profile_id, longitude, latitude)VALUES ( 'zecica', 'zec7.png', 2, '2025-7-18',  5, 21.1489, 44.7866);
+INSERT INTO public.posts(description, image, likes_count, publishing_date, profile_id, longitude, latitude)VALUES ('divan dan za druzenje', 'bunny.jpg', 5, '2024-11-15 17:00', 1, 20.4489, 44.7866);
+INSERT INTO public.posts(description, image, likes_count, publishing_date, profile_id, longitude, latitude)VALUES ( 'zeccc', 'bunny2.webp', 6, '2024-12-12 17:00', 1,  20.3489, 44.7966);
+INSERT INTO public.posts(description, image, likes_count, publishing_date, profile_id, longitude, latitude)VALUES ( 'mika', 'zec1.jpg', 5, '2025-3-25 17:00',  2, 20.7489, 44.9866);
+INSERT INTO public.posts(description, image, likes_count, publishing_date, profile_id, longitude, latitude)VALUES ( 'zeka zec', 'zec2.jpg', 5, '2025-4-26 17:00',  1, 20.9489, 45.7866);
+INSERT INTO public.posts(description, image, likes_count, publishing_date, profile_id, longitude, latitude)VALUES ( 'NOVI Zec', 'zec5.jpg', 4, '2025-4-24 17:00',  2, 21.0489, 45.7866);
+INSERT INTO public.posts(description, image, likes_count, publishing_date, profile_id, longitude, latitude)VALUES ( 'janov zec', 'zec6.jpeg', 3, '2025-7-20 17:00',  3, 22.0489, 45.7866);
+INSERT INTO public.posts(description, image, likes_count, publishing_date, profile_id, longitude, latitude)VALUES ( 'moj zec', 'zec4.webp', 3, '2025-7-19 17:00',  4, 22.3489, 45.9866);
+INSERT INTO public.posts(description, image, likes_count, publishing_date, profile_id, longitude, latitude)VALUES ( 'dusko, pera i zeka', 'zec3.jpg', 2, '2025-7-20 17:00',  5, 22.0489, 45.7866);
+INSERT INTO public.posts(description, image, likes_count, publishing_date, profile_id, longitude, latitude)VALUES ( 'zecica', 'zec7.png', 2, '2025-7-18 17:00',  5, 21.1489, 44.7866);
+
+INSERT INTO public.locations(longitude, latitude) VALUES (20.4489, 44.7866);
+INSERT INTO public.locations(longitude, latitude) VALUES (20.3489, 44.7966);
+INSERT INTO public.locations(longitude, latitude) VALUES (20.7489, 44.9866);
+INSERT INTO public.locations(longitude, latitude) VALUES (20.9489, 45.7866);
+INSERT INTO public.locations(longitude, latitude) VALUES (21.0489, 45.7866);
+INSERT INTO public.locations(longitude, latitude) VALUES (22.0489, 45.7866);
+INSERT INTO public.locations(longitude, latitude) VALUES (22.3489, 45.9866);
+INSERT INTO public.locations(longitude, latitude) VALUES (22.0489, 45.7866);
+INSERT INTO public.locations(longitude, latitude) VALUES (21.1489, 44.7866);
 
 
 INSERT INTO public.comments(content, creation_date, creator_id, post_id)VALUES ('wow', '2024-11-16', 1, 1);

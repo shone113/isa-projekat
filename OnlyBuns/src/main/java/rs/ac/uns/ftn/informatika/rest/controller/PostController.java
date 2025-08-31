@@ -17,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.informatika.rest.domain.Comment;
+import rs.ac.uns.ftn.informatika.rest.domain.Location;
 import rs.ac.uns.ftn.informatika.rest.domain.Post;
 import rs.ac.uns.ftn.informatika.rest.domain.User;
 import rs.ac.uns.ftn.informatika.rest.dto.CommentDTO;
@@ -78,6 +79,7 @@ public class PostController {
         return ResponseEntity.ok(postDTO);
     }
 
+    @PreAuthorize("hasRole('USER')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Post> createPost(@RequestBody PostDTO post){
         Post savedPost = null;
@@ -163,6 +165,12 @@ public class PostController {
     public  ResponseEntity<Map<Month, Integer>> getYearlyStatystic() {
         Map<Month, Integer> yearlyStatystic = postService.getYearlyStatystic();
         return ResponseEntity.ok(yearlyStatystic);
+    }
+
+    @GetMapping("/{postId}/location")
+    public ResponseEntity<Location> getPostLocation(@PathVariable int postId) {
+        Location location = postService.getLocationByPostId(postId);
+        return ResponseEntity.ok((location));
     }
 //
 //    @GetMapping(value = "/removeCache")

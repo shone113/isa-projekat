@@ -1,5 +1,7 @@
 package rs.ac.uns.ftn.informatika.rest.service;
 
+import org.springframework.cache.annotation.Cacheable;
+import rs.ac.uns.ftn.informatika.rest.domain.Location;
 import rs.ac.uns.ftn.informatika.rest.domain.Post;
 import rs.ac.uns.ftn.informatika.rest.dto.PostDTO;
 
@@ -18,4 +20,7 @@ public interface IPostService {
     //    void delete(Integer id);
 //    Post deltePostById(Integer id);
     void delete(Integer postId, Integer creatorUserId) throws Exception;
+
+    @Cacheable(value = "postLocations")
+    Location getLocationByPostId(Integer postId);
 }

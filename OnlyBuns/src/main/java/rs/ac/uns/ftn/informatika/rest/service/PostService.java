@@ -1,14 +1,13 @@
 package rs.ac.uns.ftn.informatika.rest.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
-import rs.ac.uns.ftn.informatika.rest.domain.Comment;
-import rs.ac.uns.ftn.informatika.rest.domain.Post;
-import rs.ac.uns.ftn.informatika.rest.domain.Profile;
-import rs.ac.uns.ftn.informatika.rest.domain.User;
+import rs.ac.uns.ftn.informatika.rest.domain.*;
 import rs.ac.uns.ftn.informatika.rest.dto.ImageDTO;
 import rs.ac.uns.ftn.informatika.rest.dto.PostDTO;
 import rs.ac.uns.ftn.informatika.rest.repository.IPostRepository;
@@ -110,22 +109,32 @@ public class PostService implements IPostService {
         if (post.getId() != null) {
             throw new Exception("Id mora biti null prilikom perzistencije novog entiteta.");
         }
-        Post savedPost = postRepository.save(new Post(post));
+        Profile profile = profileService.getProfileById(post.getCreatorProfileId());
+        post.setImage(getImagePath(post));
+        Post newPost = new Post(post);
+        newPost.setProfile(profile);
+        Post savedPost = postRepository.save(newPost);
+        userService.increasePostCount(newPost.getCreatorProfileId());
         return savedPost;
     }
 
     @Transactional
     public PostDTO likePost(int postId, int profileId) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new EntityNotFoundException("Post not found with ID: " + postId));
+        try{
+            Post post = postRepository.findById(postId)
+                    .orElseThrow(() -> new EntityNotFoundException("Post not found with ID: " + postId));
 
-        postRepository.likePost(postId, profileId);
+            postRepository.likePost(postId, profileId);
 
-        post.setLikesCount(post.getLikesCount() + 1);
-        postRepository.save(post);
-        PostDTO postDTO = new PostDTO(post);
-        postDTO.setLiked(true);
-        return postDTO;
+            post.setLikesCount(post.getLikesCount() + 1);
+            postRepository.save(post);
+            PostDTO postDTO = new PostDTO(post);
+            postDTO.setLiked(true);
+            return postDTO;
+        } catch (ObjectOptimisticLockingFailureException e) {
+        System.err.println("Optimistic lock exception occurred, retrying...");
+        return likePost(postId, profileId); // Rekurzivni poziv za ponovni pokušaj
+    }
     }
 
 
@@ -166,6 +175,8 @@ public class PostService implements IPostService {
         return postToUpdate;
     }
 
+    @Transactional
+    @CacheEvict(value = "postLocations", key = "#postId")
     public void delete(Integer postId, Integer creatorUserId) {
         Integer creatorProfileId = profileService.getProfileByUserId(creatorUserId).getId();
         Post post = postRepository.findById(postId).get();
@@ -183,6 +194,12 @@ public class PostService implements IPostService {
         return postRepository.countPostsInLastMonth(date);
     }
 
+    public String getImagePath(PostDTO post){
+        String filepath = post.getImage();
+        String imageName = filepath.substring(filepath.lastIndexOf("/") + 1);
+        return imageName;
+    }
+
 
     @Cacheable(value = "mostPopularPosts")
     public List<Post> mostPopularPosts() {
@@ -198,6 +215,30 @@ public class PostService implements IPostService {
         Pageable pageable = PageRequest.of(0, 5);
         LocalDate date = LocalDate.now().minusDays(7);
         return postRepository.findMostLikedPostsInLastWeek(date, pageable);
+    }
+
+    @Override
+    @Cacheable(value = "postLocations")
+    public Location getLocationByPostId(Integer postId) {
+        System.out.println("Location for post with id: " + postId);
+        Optional<Post> post = postRepository.findById(postId);
+        if(post.isPresent())
+            return new Location(post.get().getLatitude(), post.get().getLongitude());
+        System.out.println("There is no such location!");
+        return null;
+    }
+
+    @Transactional
+    @CacheEvict(value = "postLocations", key = "#postId")
+    public Location updatePostLocation(Integer postId, double newLongitude, double newLatitude) {
+        System.out.println("Updatind location in database for post with id: : " + postId);
+
+        Post postToUpdate = postRepository.findById(postId).orElseThrow();
+        postToUpdate.setLongitude(newLongitude);
+        postToUpdate.setLatitude(newLatitude);
+        postRepository.save(postToUpdate);
+
+        return new Location(newLongitude, newLatitude);
     }
 
 
