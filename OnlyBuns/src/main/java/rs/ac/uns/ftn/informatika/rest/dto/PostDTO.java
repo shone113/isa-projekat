@@ -20,13 +20,14 @@ public class PostDTO {
     private boolean liked;
     private String creatorName;
     private String creatorSurname;
+    private String creatorUsername;
     private double longitude;
     private double latitude;
 
 
     public PostDTO() {}
 
-    public PostDTO(Integer id, String description, int likesCount, int creatorId, String creatorName, String creatorSurname){
+    public PostDTO(Integer id, String description, int likesCount, int creatorId, String creatorName, String creatorSurname, String creatorUsername){
         super();
         this.id = id;
         this.description = description;
@@ -38,6 +39,7 @@ public class PostDTO {
         this.creatorProfileId = creatorId;
         this.creatorName = creatorName;
         this.creatorSurname = creatorSurname;
+        this.creatorUsername = creatorUsername;
     }
     public PostDTO(Post post) {
         this.id = post.getId();
@@ -48,8 +50,15 @@ public class PostDTO {
         this.image = post.getImage();
         this.comments = post.getComments();
         this.creatorProfileId = post.getCreatorProfileId() != null ? post.getCreatorProfileId() : null;
-        this.creatorName = "";
-        this.creatorSurname = "";
+        if(post.getProfile() != null){
+            this.creatorName = post.getProfile().getUser().getName();
+            this.creatorSurname = post.getProfile().getUser().getSurname();
+            this.creatorUsername = post.getProfile().getUser().getUsername();
+        } else {
+            this.creatorName = "";
+            this.creatorSurname = "";
+            this.creatorUsername = "";
+        }
         this.latitude = post.getLatitude();
         this.longitude = post.getLongitude();
     }
@@ -115,7 +124,8 @@ public class PostDTO {
     public void setCreatorSurname(String creatorSurname){ this.creatorSurname = creatorSurname; }
     public String getCreatorName(){ return this.creatorName; }
     public String getCreatorSurname(){ return this.creatorSurname; }
-
+    public String getCreatorUsername() { return  this.creatorUsername; }
+    public void setCreatorUsername(String creatorUsername) {this.creatorUsername = creatorUsername;}
     public double getLongitude() {
         return longitude;
     }

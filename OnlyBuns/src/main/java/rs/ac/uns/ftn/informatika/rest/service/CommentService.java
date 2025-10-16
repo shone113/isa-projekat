@@ -34,7 +34,6 @@ public class CommentService {
 
     public CommentService(){
         userService = new UserService();
-        postService = new PostService();
     }
 
     public List<CommentDTO> findCommentsForPost(int postId) {

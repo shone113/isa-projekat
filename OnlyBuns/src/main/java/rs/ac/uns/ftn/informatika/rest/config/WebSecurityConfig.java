@@ -92,6 +92,7 @@ public class WebSecurityConfig {
         http.exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint);
         http.authorizeRequests().antMatchers(HttpMethod.POST, "/auth/login").permitAll().antMatchers("/auth/**").permitAll().antMatchers("/images/**").permitAll()		// /auth/**
                 .antMatchers(HttpMethod.GET, "/api/post").permitAll()
+                .antMatchers("/actuator/prometheus").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/profile/**").permitAll()
                 .antMatchers(HttpMethod.PUT, "/api/profile/**").hasRole("USER")
                 .antMatchers(HttpMethod.GET, "/api/comment//by-post-id/{id}").permitAll()

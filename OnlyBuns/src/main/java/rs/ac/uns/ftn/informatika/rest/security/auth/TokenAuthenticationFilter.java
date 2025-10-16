@@ -40,6 +40,11 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException {
 
+        String path = request.getRequestURI();
+        if ("/actuator/prometheus".equals(path)) {
+            chain.doFilter(request, response);
+            return;
+        }
 
         String email;
 

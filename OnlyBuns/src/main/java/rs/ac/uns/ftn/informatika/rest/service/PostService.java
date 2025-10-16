@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.informatika.rest.service;
 
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -7,7 +8,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
+import rs.ac.uns.ftn.informatika.rest.config.RabbitConfig;
 import rs.ac.uns.ftn.informatika.rest.domain.*;
+import rs.ac.uns.ftn.informatika.rest.dto.AdPostMessageDTO;
 import rs.ac.uns.ftn.informatika.rest.dto.ImageDTO;
 import rs.ac.uns.ftn.informatika.rest.dto.PostDTO;
 import rs.ac.uns.ftn.informatika.rest.repository.IPostRepository;
@@ -30,6 +33,12 @@ public class PostService implements IPostService {
     private ProfileService profileService;
     @Autowired
     private ImageService imageService;
+
+    private final RabbitTemplate rabbitTemplate;
+
+    public PostService(RabbitTemplate rabbitTemplate) {
+        this.rabbitTemplate = rabbitTemplate;
+    }
 
     @Override
     public List<PostDTO> findAll() {
@@ -312,5 +321,11 @@ public class PostService implements IPostService {
             }
         }
         return postsPerMonth;
+    }
+
+    public void sendPost(PostDTO post) {
+        AdPostMessageDTO messageDTO = new AdPostMessageDTO(post);
+        rabbitTemplate.convertAndSend(RabbitConfig.EXCHANGE_NAME, "", messageDTO);
+        System.out.println("Poslata objava agencijama: " + post.getDescription());
     }
 }

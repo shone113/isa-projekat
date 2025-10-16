@@ -172,6 +172,17 @@ public class PostController {
         Location location = postService.getLocationByPostId(postId);
         return ResponseEntity.ok((location));
     }
+
+    @PostMapping("/approve/{id}")
+    public ResponseEntity<String> approvePost(@PathVariable Integer id) {
+        PostDTO postDTO = postService.findOne(id);
+
+        // opcionalno: označi post kao odobren za reklamu
+        // post.setApproved(true);
+        // postRepository.save(post);
+        postService.sendPost(postDTO);
+        return ResponseEntity.ok("Objava odobrena i poslata agencijama!");
+    }
 //
 //    @GetMapping(value = "/removeCache")
 //    public ResponseEntity<String> removeFromCache() {

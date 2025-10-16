@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import rs.ac.uns.ftn.informatika.rest.domain.Profile;
+import rs.ac.uns.ftn.informatika.rest.metric.ActiveUserMetrics;
 import rs.ac.uns.ftn.informatika.rest.domain.User;
 import rs.ac.uns.ftn.informatika.rest.dto.LoginDetailsDto;
 import rs.ac.uns.ftn.informatika.rest.dto.UserDto;
@@ -29,6 +30,9 @@ public class AuthenticationController {
 
     @Autowired
     private TokenUtils tokenUtils;
+
+    @Autowired
+    private ActiveUserMetrics activeUserMetrics;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -66,6 +70,7 @@ public class AuthenticationController {
         userService.updateLastLogInTimeForUser(user);
         String jwt = tokenUtils.generateToken(user);
         int expiresIn = tokenUtils.getExpiredIn();
+        activeUserMetrics.userLoggedIn();
 
         // Vrati token kao odgovor na uspesnu autentifikaciju
         return ResponseEntity.ok(new UserTokenState(jwt, expiresIn));
@@ -96,6 +101,13 @@ public class AuthenticationController {
         if (!activated)
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invalid token!");
         return ResponseEntity.ok("The account has been successfully activated!");
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logoutUser() {
+        activeUserMetrics.userLoggedOut();
+        
+        return ResponseEntity.ok().build();
     }
 
 }
