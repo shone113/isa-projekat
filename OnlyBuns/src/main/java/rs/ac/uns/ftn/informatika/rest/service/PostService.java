@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.informatika.rest.service;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -79,12 +80,10 @@ public class PostService implements IPostService {
         return filteredPostDTOs;
     }
 
-    @Transactional // ili readOnly=true
+    @Transactional
     public Post requireOne(Integer postId) {
         return postRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException("Post not found: " + postId));
-        // Alternativa bez SELECT-a (ako je sigurno da postoji):
-        // return postRepository.getReferenceById(postId);
     }
 
     @Override
@@ -131,8 +130,14 @@ public class PostService implements IPostService {
         Post newPost = new Post(post);
         newPost.setProfile(profile);
         Post savedPost = postRepository.save(newPost);
+        putLocationInCache(savedPost.getId(), savedPost.getLatitude(), savedPost.getLongitude());
         userService.increasePostCount(newPost.getCreatorProfileId());
         return savedPost;
+    }
+
+    @CachePut(value = "postLocations", key = "#postId")
+    public Location putLocationInCache(Integer postId, double lat, double lon) {
+        return new Location(lat, lon);
     }
 
     @Transactional
@@ -241,7 +246,7 @@ public class PostService implements IPostService {
     }
 
     @Override
-    @Cacheable(value = "postLocations")
+    @Cacheable(value = "postLocations", key = "#postId")
     public Location getLocationByPostId(Integer postId) {
         System.out.println("Location for post with id: " + postId);
         Optional<Post> post = postRepository.findById(postId);
