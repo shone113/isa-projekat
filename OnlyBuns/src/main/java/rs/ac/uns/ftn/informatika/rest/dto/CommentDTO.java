@@ -6,6 +6,7 @@ import rs.ac.uns.ftn.informatika.rest.domain.User;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class CommentDTO {
     private Integer id;
@@ -15,13 +16,15 @@ public class CommentDTO {
     private Integer postId;
     private String creatorName;
     private String creatorSurname;
+    private LocalDateTime creationTs;
 
     public CommentDTO(Comment comment) {
         this.id = comment.getId();
         this.content = comment.getContent();
         this.creationDate = comment.getCreationDate();
         this.creatorId = comment.getCreatorId();
-        this.postId = comment.getId();
+        this.postId = comment.getPostId();
+        this.creationTs = comment.getCreationTs();
     }
 
     public CommentDTO(Integer id, String content, LocalDate creationDate, Integer creatorId, Integer postId) {
@@ -90,4 +93,11 @@ public class CommentDTO {
         this.creatorSurname = creatorSurname;
     }
 
+    public LocalDateTime getCreationTs() {
+        return creationTs;
+    }
+
+    public void setCreationTs(LocalDateTime creationTs) {
+        this.creationTs = creationTs;
+    }
 }

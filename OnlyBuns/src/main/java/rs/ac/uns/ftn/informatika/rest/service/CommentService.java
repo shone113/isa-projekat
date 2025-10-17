@@ -7,6 +7,7 @@ import rs.ac.uns.ftn.informatika.rest.domain.Post;
 import rs.ac.uns.ftn.informatika.rest.domain.Profile;
 import rs.ac.uns.ftn.informatika.rest.domain.User;
 import rs.ac.uns.ftn.informatika.rest.dto.CommentDTO;
+import rs.ac.uns.ftn.informatika.rest.exaption.RateLimitExceededException;
 import rs.ac.uns.ftn.informatika.rest.repository.ICommentRepository;
 import rs.ac.uns.ftn.informatika.rest.repository.IPostRepository;
 import rs.ac.uns.ftn.informatika.rest.repository.IUserRepository;
@@ -37,7 +38,7 @@ public class CommentService {
     }
 
     public List<CommentDTO> findCommentsForPost(int postId) {
-        List<Comment> comments = commentRepository.findAll();
+        List<Comment> comments = commentRepository.findByPost_IdOrderByCreationDateAsc(postId);
         List<CommentDTO> commentDTOs = new ArrayList<>();
         for( Comment comment : comments ) {
             if(comment.getPostId().equals(postId)) {
@@ -54,19 +55,34 @@ public class CommentService {
 
     @Transactional
     public CommentDTO create(CommentDTO commentDTO) {
-        Post post = new Post(postService.findOne(commentDTO.getPostId()));
-        User user = userService.findById(commentDTO.getCreatorId());
+        Post post = postService.requireOne(commentDTO.getPostId());
+
         Profile profile = profileService.getProfileByUserId(commentDTO.getCreatorId());
-        Comment comment = new Comment(commentDTO);
-        //comment.setCreator(user);
-        comment.setCreator(profile);
-        comment.setPost(post);
-        comment.setCreationDate(LocalDate.now());
-        Comment response = commentRepository.save(comment);
-        CommentDTO responseDTO = new CommentDTO(response);
-        responseDTO.setCreatorName(user.getName());
-        responseDTO.setCreatorSurname(user.getSurname());
-        return responseDTO;
+        if (profile == null) {
+            throw new IllegalArgumentException("Profile not found for userId: " + commentDTO.getCreatorId());
+        }
+
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime windowStart = now.minusHours(1);
+
+        long already = commentRepository.countByCreatorInLastHour(profile.getId(), windowStart);
+        if (already >= 60) {
+            throw new RateLimitExceededException("Limit 60 komentara po satu je dostignut.");
+        }
+
+        Comment c = new Comment();
+        c.setContent(Objects.requireNonNull(commentDTO.getContent(), "content is required"));
+        c.setPost(post);
+        c.setCreator(profile);
+        c.setCreationTs(now);
+        c.setCreationDate(LocalDate.now());
+
+        Comment saved = commentRepository.saveAndFlush(c);
+
+        CommentDTO out = new CommentDTO(saved);
+        out.setCreatorName(profile.getUser().getName());
+        out.setCreatorSurname(profile.getUser().getSurname());
+        return out;
     }
 
     @Transactional

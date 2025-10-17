@@ -4,13 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5acb3945-3c37-432d-a3f3-67e3c968a8cd" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/OnlyBuns/src/main/java/rs/ac/uns/ftn/informatika/rest/dto/AdPostMessageDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OnlyBuns/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/OnlyBuns/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OnlyBuns/src/main/java/rs/ac/uns/ftn/informatika/rest/config/RabbitConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/OnlyBuns/src/main/java/rs/ac/uns/ftn/informatika/rest/config/RabbitConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OnlyBuns/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/OnlyBuns/src/main/resources/application.properties" afterDir="false" />
-    </list>
+    <list default="true" id="5acb3945-3c37-432d-a3f3-67e3c968a8cd" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -53,28 +47,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Maven.rest-example [clean].executor": "Run",
-    "Maven.rest-example [test].executor": "Run",
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "Spring Boot.RestExampleApplication.executor": "Run",
-    "git-widget-placeholder": "development",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/Programi/Programi/7.semestar/ISA/PROJEKAT-BEKEND/isa-projekat/OnlyBuns",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Maven.rest-example [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.rest-example [test].executor&quot;: &quot;Run&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;Spring Boot.RestExampleApplication.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;development&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Programi/Programi/7.semestar/ISA/PROJEKAT-BEKEND/isa-projekat/OnlyBuns&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Spring Boot.RestExampleApplication">
     <configuration name="imports.sql" type="DatabaseScript" editBeforeRun="true" temporary="true" nameIsGenerated="true">
       <script-file value="$PROJECT_DIR$/src/main/resources/imports.sql" />
@@ -172,6 +166,7 @@
       <workItem from="1752945928754" duration="61000" />
       <workItem from="1755264540833" duration="64000" />
       <workItem from="1758927768385" duration="446000" />
+      <workItem from="1760640222619" duration="110000" />
     </task>
     <servers />
   </component>

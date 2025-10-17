@@ -79,6 +79,14 @@ public class PostService implements IPostService {
         return filteredPostDTOs;
     }
 
+    @Transactional // ili readOnly=true
+    public Post requireOne(Integer postId) {
+        return postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException("Post not found: " + postId));
+        // Alternativa bez SELECT-a (ako je sigurno da postoji):
+        // return postRepository.getReferenceById(postId);
+    }
+
     @Override
     public PostDTO findOne(Integer id) {
 //        Post post = postRepository.getOne(id);
@@ -129,36 +137,42 @@ public class PostService implements IPostService {
 
     @Transactional
     public PostDTO likePost(int postId, int profileId) {
-        try{
-            Post post = postRepository.findById(postId)
-                    .orElseThrow(() -> new EntityNotFoundException("Post not found with ID: " + postId));
+        int inserted = postRepository.insertLike(postId, profileId);
 
-            postRepository.likePost(postId, profileId);
+        if (inserted == 1) {
+            postRepository.incrementLikesCount(postId);
+        }
 
-            post.setLikesCount(post.getLikesCount() + 1);
-            postRepository.save(post);
-            PostDTO postDTO = new PostDTO(post);
-            postDTO.setLiked(true);
-            return postDTO;
-        } catch (ObjectOptimisticLockingFailureException e) {
-        System.err.println("Optimistic lock exception occurred, retrying...");
-        return likePost(postId, profileId); // Rekurzivni poziv za ponovni pokušaj
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+            throw new IllegalStateException("Sleep interrupted", ie);
+        }
+
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException("Post not found with ID: " + postId));
+
+        PostDTO dto = new PostDTO(post);
+        dto.setLiked(inserted == 1);
+        return dto;
     }
-    }
+
 
 
     @Transactional
     public PostDTO unlikePost(int postId, int profileId) {
+        int deleted = postRepository.unlikePost(postId, profileId);
+        if (deleted == 1) {
+            postRepository.decrementLikesIfPositive(postId);
+        }
+
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException("Post not found with ID: " + postId));
 
-        postRepository.unlikePost(postId, profileId);
-
-        post.setLikesCount(post.getLikesCount() - 1);
-        postRepository.save(post);
-        PostDTO postDTO = new PostDTO(post);
-        postDTO.setLiked(false);
-        return postDTO;
+        PostDTO dto = new PostDTO(post);
+        dto.setLiked(false);
+        return dto;
     }
 
     @Transactional

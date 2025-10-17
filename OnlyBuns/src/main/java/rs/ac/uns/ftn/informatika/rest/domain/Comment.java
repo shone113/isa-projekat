@@ -5,6 +5,7 @@ import rs.ac.uns.ftn.informatika.rest.service.ProfileService;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "comments")
@@ -28,12 +29,16 @@ public class Comment {
     @JoinColumn(name = "post_id")
     private Post post;
 
+    @Column(name = "creation_ts", nullable = false)
+    private LocalDateTime creationTs;
+
     public Comment(){}
 
     public Comment(String content, LocalDate creationDate, Post post) {
         this.content = content;
         this.creationDate = creationDate;
         this.post = post;
+        this.creationTs = LocalDateTime.now();
     }
 
     public Comment(CommentDTO commentDTO) {
@@ -84,4 +89,8 @@ public class Comment {
     public void setCreator(Profile creator) {this.creator = creator;}
 
     public void setPost(Post post) {this.post = post;}
+
+    public LocalDateTime getCreationTs() { return creationTs; }
+
+    public void setCreationTs(LocalDateTime creationTs) { this.creationTs = creationTs; }
 }

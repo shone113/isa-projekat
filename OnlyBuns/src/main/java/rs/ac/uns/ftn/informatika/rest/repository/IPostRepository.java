@@ -23,13 +23,25 @@ public interface IPostRepository extends JpaRepository<Post, Integer> {
     @Query("DELETE FROM Post p WHERE p.id = :postId")
     public void deletePostById(@Param("postId") Integer postId);
 
-    @Modifying
-    @Query(value = "INSERT INTO post_likes (post_id, profile_id) VALUES (:postId, :profileId)", nativeQuery = true)
-    void likePost(@Param("postId") Integer postId, @Param("profileId") Integer profileId);
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query(value = """
+    INSERT INTO post_likes(post_id, profile_id)
+    SELECT :postId, :profileId
+    WHERE NOT EXISTS (
+        SELECT 1 FROM post_likes
+        WHERE post_id = :postId AND profile_id = :profileId
+    )
+    """, nativeQuery = true)
+    int insertLike(@Param("postId") int postId, @Param("profileId") int profileId);
+
 
     @Modifying
     @Query(value = "DELETE FROM post_likes WHERE post_id = :postId AND profile_id = :profileId", nativeQuery = true)
     void unlikePost(@Param("postId") Integer postId, @Param("profileId") Integer profileId);
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("UPDATE Post p SET p.likesCount = p.likesCount - 1 WHERE p.id = :postId AND p.likesCount > 0")
+    int decrementLikesIfPositive(@Param("postId") int postId);
 
     @Query(value = "SELECT COUNT(*) > 0 FROM post_likes WHERE post_id = :postId AND profile_id = :profileId", nativeQuery = true)
     boolean doesUserProfileLikedPost(@Param("profileId") Integer profileId, @Param("postId") Integer postId);
@@ -50,6 +62,14 @@ public interface IPostRepository extends JpaRepository<Post, Integer> {
 
     @Query("SELECT new rs.ac.uns.ftn.informatika.rest.dto.PostDTO(p) FROM Post p WHERE p.id = :postId")
     PostDTO findOnePostWithoutImage(@Param("postId") Integer postId);
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("UPDATE Post p SET p.likesCount = p.likesCount + 1 WHERE p.id = :postId")
+    int incrementLikesCount(@Param("postId") int postId);
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query(value = "DELETE FROM post_likes WHERE post_id = :postId AND profile_id = :profileId", nativeQuery = true)
+    int unlikePost(@Param("postId") int postId, @Param("profileId") int profileId);
 
     @Query("SELECT count(p) FROM Post  p")
     int countAllPosts();

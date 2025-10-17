@@ -16,4 +16,10 @@ public interface ICommentRepository extends JpaRepository<Comment, Long> {
     @Query("SELECT c FROM Comment c WHERE c.creationDate BETWEEN :startDate AND :endDate")
     List<Comment> findCommentsFromDateRange(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 
+    List<Comment> findByPost_IdOrderByCreationDateAsc(Integer postId);
+
+    @Query("select count(c) from Comment c " +
+            "where c.creator.id = :profileId and c.creationTs >= :since")
+    long countByCreatorInLastHour(@Param("profileId") Integer profileId,
+                                  @Param("since") LocalDateTime since);
 }
